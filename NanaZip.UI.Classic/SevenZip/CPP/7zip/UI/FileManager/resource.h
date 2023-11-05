@@ -15,6 +15,7 @@
 #define IDB_MOUNT    110
 #define IDB_NEW      111
 #define IDB_EXPAND   112
+#define IDB_WIMINFO  113
 
 #define IDB_ADD2     150
 #define IDB_EXTRACT2 151
@@ -27,6 +28,7 @@
 #define IDB_MOUNT2   170
 #define IDB_NEW2     171
 #define IDB_EXPAND2  172
+#define IDB_WIMINFO2 173
 
 #define IDB_PARENT_FOLDER 160
 
@@ -191,6 +193,7 @@
 #define IDS_MOUNT                       7210
 #define IDS_NEW                         7211
 #define IDS_EXPAND                      7212
+#define IDS_WIMINFO                     7213
 
 #define IDS_SPLITTING                   7303
 #define IDS_SPLIT_CONFIRM_TITLE         7304

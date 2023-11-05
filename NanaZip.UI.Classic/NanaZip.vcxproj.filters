@@ -122,6 +122,12 @@
     </Image>
     <Image Include="Assets\Toolbar\Mount_24x24.bmp" />
     <Image Include="Assets\Toolbar\Mount_32x32.bmp" />
+    <Image Include="Assets\Toolbar\WimInfo_24x24.bmp" />
+    <Image Include="Assets\Toolbar\WimInfo_32x32.bmp" />
+    <Image Include="Assets\Toolbar\New_24x24.bmp" />
+    <Image Include="Assets\Toolbar\New_32x32.bmp" />
+    <Image Include="Assets\Toolbar\Expand_24x24.bmp" />
+    <Image Include="Assets\Toolbar\Expand_32x32.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SevenZip\CPP\7zip\UI\FileManager\ClassDefs.cpp">

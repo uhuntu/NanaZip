@@ -1217,6 +1217,15 @@ Do you want to update it in the archive?</value>
   <data name="Resource7210" xml:space="preserve">
     <value>Mount</value>
   </data>
+  <data name="Resource7211" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Resource7212" xml:space="preserve">
+    <value>Expand</value>
+  </data>
+  <data name="Resource7213" xml:space="preserve">
+    <value>WimInfo</value>
+  </data>
   <data name="Resource7300" xml:space="preserve">
     <value>Split File</value>
   </data>

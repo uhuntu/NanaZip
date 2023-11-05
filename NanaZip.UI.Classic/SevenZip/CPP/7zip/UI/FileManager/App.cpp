@@ -206,7 +206,8 @@ static const CButtonInfo g_WimDismButtons[] =
 {
   { kMenuCmdID_WimDism_Mount,   IDB_MOUNT,   IDB_MOUNT2,   IDS_MOUNT },
   { kMenuCmdID_WimDism_New,     IDB_NEW,     IDB_NEW2,     IDS_NEW },
-  { kMenuCmdID_WimDism_Expand,  IDB_EXPAND,  IDB_EXPAND2,  IDS_EXPAND }
+  { kMenuCmdID_WimDism_Expand,  IDB_EXPAND,  IDB_EXPAND2,  IDS_EXPAND },
+  { kMenuCmdID_WimDism_WimInfo, IDB_WIMINFO, IDB_WIMINFO2, IDS_WIMINFO }
 };
 
 static bool SetButtonText(int commandID, const CButtonInfo *buttons, unsigned numButtons, UString &s)
