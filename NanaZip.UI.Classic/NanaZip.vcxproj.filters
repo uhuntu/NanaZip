@@ -120,6 +120,8 @@
     <Image Include="Assets\ParentFolder.bmp">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\Toolbar\Mount_24x24.bmp" />
+    <Image Include="Assets\Toolbar\Mount_32x32.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SevenZip\CPP\7zip\UI\FileManager\ClassDefs.cpp">

@@ -335,6 +335,7 @@ void OnMenuActivating(HWND /* hWnd */, HMENU hMenu, int position)
     menu.CheckItemByID(IDM_VIEW_FLAT_VIEW, g_App.GetFlatMode());
     menu.CheckItemByID(IDM_VIEW_ARCHIVE_TOOLBAR, g_App.ShowArchiveToolbar);
     menu.CheckItemByID(IDM_VIEW_STANDARD_TOOLBAR, g_App.ShowStandardToolbar);
+    menu.CheckItemByID(IDM_VIEW_WIMDISM_TOOLBAR, g_App.ShowWimDismToolbar);
     menu.CheckItemByID(IDM_VIEW_TOOLBARS_LARGE_BUTTONS, g_App.LargeButtons);
     menu.CheckItemByID(IDM_VIEW_TOOLBARS_SHOW_BUTTONS_TEXT, g_App.ShowButtonsLables);
     menu.CheckItemByID(IDM_VIEW_AUTO_REFRESH, g_App.Get_AutoRefresh_Mode());
@@ -795,6 +796,7 @@ bool OnMenuCommand(HWND hWnd, unsigned id)
     case IDM_VIEW_TWO_PANELS:       g_App.SwitchOnOffOnePanel(); break;
     case IDM_VIEW_STANDARD_TOOLBAR: g_App.SwitchStandardToolbar(); break;
     case IDM_VIEW_ARCHIVE_TOOLBAR:  g_App.SwitchArchiveToolbar(); break;
+    case IDM_VIEW_WIMDISM_TOOLBAR:  g_App.SwitchWimDismToolbar(); break;
 
     case IDM_VIEW_TOOLBARS_SHOW_BUTTONS_TEXT: g_App.SwitchButtonsLables(); break;
     case IDM_VIEW_TOOLBARS_LARGE_BUTTONS:     g_App.SwitchLargeButtons(); break;

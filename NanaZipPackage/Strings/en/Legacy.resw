@@ -240,6 +240,9 @@
   <data name="Resource751" xml:space="preserve">
     <value>Standard Toolbar</value>
   </data>
+  <data name="Resource755" xml:space="preserve">
+    <value>WimDism Toolbar</value>
+  </data>
   <data name="Resource752" xml:space="preserve">
     <value>Large Buttons</value>
   </data>
@@ -1210,6 +1213,9 @@ Do you want to update it in the archive?</value>
   </data>
   <data name="Resource7206" xml:space="preserve">
     <value>Info</value>
+  </data>
+  <data name="Resource7210" xml:space="preserve">
+    <value>Mount</value>
   </data>
   <data name="Resource7300" xml:space="preserve">
     <value>Split File</value>

@@ -34,6 +34,7 @@
     <!-- Internationalization Support -->
     <PRIResource Include="Strings\**\*">
       <Link>Strings\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <SubType>Designer</SubType>
     </PRIResource>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,7 @@ extern bool g_IsSmallScreen;
 
 // must be larger than context menu IDs
 const int kMenuCmdID_Toolbar_Start = 1070;
+const int kMenuCmdID_WimDism_Start = 1080;
 const int kMenuCmdID_Plugin_Start = 1100;
 
 enum
@@ -28,6 +29,14 @@ enum
   kMenuCmdID_Toolbar_Extract,
   kMenuCmdID_Toolbar_Test,
   kMenuCmdID_Toolbar_End
+};
+
+enum
+{
+  kMenuCmdID_WimDism_Mount = kMenuCmdID_WimDism_Start,
+  kMenuCmdID_WimDism_New,
+  kMenuCmdID_WimDism_Expand,
+  kMenuCmdID_WimDism_End
 };
 
 class CPanelCallbackImp: public CPanelCallback
@@ -119,6 +128,7 @@ public:
 
   bool ShowStandardToolbar;
   bool ShowArchiveToolbar;
+  bool ShowWimDismToolbar;
   bool ShowButtonsLables;
   bool LargeButtons;
 
@@ -318,7 +328,7 @@ public:
     {
       ShowButtonsLables = !g_IsSmallScreen;
       LargeButtons = false;
-      ShowStandardToolbar = ShowArchiveToolbar = true;
+      ShowStandardToolbar = ShowArchiveToolbar = ShowWimDismToolbar = true;
     }
     else
     {
@@ -326,6 +336,7 @@ public:
       LargeButtons = ((mask & 2) != 0);
       ShowStandardToolbar = ((mask & 4) != 0);
       ShowArchiveToolbar  = ((mask & 8) != 0);
+      ShowWimDismToolbar = ((mask & 16) != 0);
     }
   }
   void SaveToolbar()
@@ -335,6 +346,7 @@ public:
     if (LargeButtons) mask |= 2;
     if (ShowStandardToolbar) mask |= 4;
     if (ShowArchiveToolbar) mask |= 8;
+    if (ShowWimDismToolbar) mask |= 16;
     SaveToolbarsMask(mask);
   }
   
@@ -348,6 +360,11 @@ public:
   void SwitchArchiveToolbar()
   {
     ShowArchiveToolbar = !ShowArchiveToolbar;
+    SaveToolbarChanges();
+  }
+  void SwitchWimDismToolbar()
+  {
+    ShowWimDismToolbar = !ShowWimDismToolbar;
     SaveToolbarChanges();
   }
   void SwitchButtonsLables()
