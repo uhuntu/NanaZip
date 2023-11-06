@@ -791,8 +791,8 @@ static void ExecuteCommandDism(UINT commandID)
 
   switch (commandID)
   {
-    case kMenuCmdID_WimDism_Mount: g_App.AddToArchive(); break;
-    case kMenuCmdID_WimDism_New: g_App.ExtractArchives(); break;
+    case kMenuCmdID_WimDism_Mount: g_App.TestArchives(); break;
+    case kMenuCmdID_WimDism_New: g_App.TestArchives(); break;
     case kMenuCmdID_WimDism_Expand: g_App.TestArchives(); break;
     case kMenuCmdID_WimDism_WimInfo: g_App.TestArchives(); break;
   }
