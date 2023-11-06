@@ -1015,68 +1015,6 @@ void CPanel::ExtractArchives()
       );
 }
 
-/*
-static void AddValuePair(UINT resourceID, UInt64 value, UString &s)
-{
-  AddLangString(s, resourceID);
-  char sz[32];
-  s += ": ";
-  ConvertUInt64ToString(value, sz);
-  s += sz;
-  s.Add_LF();
-}
-
-// now we don't need CThreadTest, since now we call CopyTo for "test command
-
-class CThreadTest: public CProgressThreadVirt
-{
-  HRESULT ProcessVirt();
-public:
-  CRecordVector<UInt32> Indices;
-  CExtractCallbackImp *ExtractCallbackSpec;
-  CMyComPtr<IFolderArchiveExtractCallback> ExtractCallback;
-  CMyComPtr<IArchiveFolder> ArchiveFolder;
-};
-
-HRESULT CThreadTest::ProcessVirt()
-{
-  RINOK(ArchiveFolder->Extract(&Indices[0], Indices.Size(),
-      true, // includeAltStreams
-      false, // replaceAltStreamColon
-      NExtract::NPathMode::kFullPathnames,
-      NExtract::NOverwriteMode::kAskBefore,
-      NULL, // path
-      BoolToInt(true), // testMode
-      ExtractCallback));
-  if (ExtractCallbackSpec->IsOK())
-  {
-    UString s;
-    AddValuePair(IDS_PROP_FOLDERS, ExtractCallbackSpec->NumFolders, s);
-    AddValuePair(IDS_PROP_FILES, ExtractCallbackSpec->NumFiles, s);
-    // AddValuePair(IDS_PROP_SIZE, ExtractCallbackSpec->UnpackSize, s);
-    // AddSizePair(IDS_COMPRESSED_COLON, Stat.PackSize, s);
-    s.Add_LF();
-    AddLangString(s, IDS_MESSAGE_NO_ERRORS);
-    FinalMessage.OkMessage.Message = s;
-  }
-  return S_OK;
-}
-
-static void AddSizePair(UInt32 langID, UInt64 value, UString &s)
-{
-  char sz[32];
-  AddLangString(s, langID);
-  s += L' ';
-  ConvertUInt64ToString(value, sz);
-  s += sz;
-  ConvertUInt64ToString(value >> 20, sz);
-  s += " (";
-  s += sz;
-  s += " MB)";
-  s.Add_LF();
-}
-*/
-
 void CPanel::TestArchives()
 {
   CRecordVector<UInt32> indices;
@@ -1098,44 +1036,6 @@ void CPanel::TestArchives()
         MessageBox_Error_HRESULT(res);
     }
     return;
-
-    /*
-    {
-    CThreadTest extracter;
-
-    extracter.ArchiveFolder = archiveFolder;
-    extracter.ExtractCallbackSpec = new CExtractCallbackImp;
-    extracter.ExtractCallback = extracter.ExtractCallbackSpec;
-    extracter.ExtractCallbackSpec->ProgressDialog = &extracter.ProgressDialog;
-    if (!_parentFolders.IsEmpty())
-    {
-      const CFolderLink &fl = _parentFolders.Back();
-      extracter.ExtractCallbackSpec->PasswordIsDefined = fl.UsePassword;
-      extracter.ExtractCallbackSpec->Password = fl.Password;
-    }
-
-    if (indices.IsEmpty())
-      return;
-
-    extracter.Indices = indices;
-
-    UString title = LangString(IDS_PROGRESS_TESTING);
-
-    extracter.ProgressDialog.CompressingMode = false;
-    extracter.ProgressDialog.MainWindow = GetParent();
-    extracter.ProgressDialog.MainTitle = "NanaZip"; // LangString(IDS_APP_TITLE);
-    extracter.ProgressDialog.MainAddTitle = title + L' ';
-
-    extracter.ExtractCallbackSpec->OverwriteMode = NExtract::NOverwriteMode::kAskBefore;
-    extracter.ExtractCallbackSpec->Init();
-
-    if (extracter.Create(title, GetParent()) != S_OK)
-      return;
-
-    }
-    RefreshTitleAlways();
-    return;
-    */
   }
 
   if (!IsFSFolder())
