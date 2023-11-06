@@ -936,7 +936,7 @@ void CPanel::AddToArchive()
 
   const UString arcName = CreateArchiveName(names);
 
-  HRESULT res = CompressFiles(destCurDirPrefix, arcName, L"",
+  HRESULT res = ::CompressFiles(destCurDirPrefix, arcName, L"",
       true, // addExtension
       names, false, true, false);
   if (res != S_OK)
@@ -1048,4 +1048,8 @@ void CPanel::TestArchives()
   if (paths.IsEmpty())
     return;
   ::TestArchives(paths);
+}
+
+void CPanel::InfoWimDism()
+{
 }

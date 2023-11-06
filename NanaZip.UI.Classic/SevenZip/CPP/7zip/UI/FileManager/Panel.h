@@ -852,6 +852,8 @@ public:
   void ExtractArchives();
   void TestArchives();
 
+  void InfoWimDism();
+
   HRESULT CopyTo(CCopyToOptions &options,
       const CRecordVector<UInt32> &indices,
       UStringVector *messages,

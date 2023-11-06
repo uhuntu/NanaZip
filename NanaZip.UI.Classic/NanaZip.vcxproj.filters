@@ -579,6 +579,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="SevenZip\CPP\7zip\UI\Common\WimDismCall.cpp">
+      <Filter>SevenZip\UI\UI Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SevenZip\CPP\7zip\UI\FileManager\MyWindowsNew.h">
@@ -1101,6 +1104,9 @@
       <Filter>AboutDialog</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SevenZip\CPP\7zip\UI\Common\WimDismCall.h">
+      <Filter>SevenZip\UI\UI Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="NanaZip.manifest" />

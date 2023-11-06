@@ -1272,6 +1272,7 @@ Are you sure you want to split archive into such volumes?</value>
   <data name="Resource7405" xml:space="preserve">
     <value>Cannot find more than one part of split file</value>
   </data>
+	
   <data name="Resource7500" xml:space="preserve">
     <value>Checksum calculating...</value>
   </data>
@@ -1284,6 +1285,11 @@ Are you sure you want to split archive into such volumes?</value>
   <data name="Resource7503" xml:space="preserve">
     <value>CRC checksum for data and names:</value>
   </data>
+
+  <data name="Resource7510" xml:space="preserve">
+    <value>WimDism information</value>
+  </data>
+	
   <data name="Resource7600" xml:space="preserve">
     <value>Benchmark</value>
   </data>
