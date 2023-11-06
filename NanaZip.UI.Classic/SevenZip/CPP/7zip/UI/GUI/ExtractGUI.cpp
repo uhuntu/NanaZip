@@ -270,7 +270,7 @@ HRESULT ExtractGUI(
     */
   }
   
-  UString title = LangString(options.TestMode ? IDS_PROGRESS_TESTING : IDS_PROGRESS_EXTRACTING);
+  UString title = LangString(options.TestMode ? IDS_PROGRESS_TESTING_DISM : IDS_PROGRESS_EXTRACTING);
 
   extracter.Title = title;
   extracter.ExtractCallbackSpec = extractCallback;

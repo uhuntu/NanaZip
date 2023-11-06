@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SevenZip\CPP\7zip\Archive\Common\ItemNameUtils.h" />
+    <ClInclude Include="SevenZip\CPP\7zip\UI\Common\WimDismCommandLine.h" />
     <ClInclude Include="SevenZip\CPP\Common\DynLimBuf.h" />
     <ClInclude Include="SevenZip\C\7zCrc.h" />
     <ClInclude Include="SevenZip\C\Alloc.h" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SevenZip\CPP\7zip\Archive\Common\ItemNameUtils.cpp" />
+    <ClCompile Include="SevenZip\CPP\7zip\UI\Common\WimDismCommandLine.cpp" />
     <ClCompile Include="SevenZip\CPP\Common\DynLimBuf.cpp" />
     <ClCompile Include="SevenZip\C\7zCrc.c" />
     <ClCompile Include="SevenZip\C\7zCrcOpt.c" />

@@ -719,6 +719,9 @@ Do you want to update it in the archive?</value>
   <data name="Resource3302" xml:space="preserve">
     <value>Testing</value>
   </data>
+  <data name="Resource3310" xml:space="preserve">
+    <value>Testing DISM</value>
+  </data>
   <data name="Resource3303" xml:space="preserve">
     <value>Opening...</value>
   </data>

@@ -402,6 +402,9 @@
     <ClInclude Include="SevenZip\CPP\Common\DynLimBuf.h">
       <Filter>SevenZip\Common</Filter>
     </ClInclude>
+    <ClInclude Include="SevenZip\CPP\7zip\UI\Common\WimDismCommandLine.h">
+      <Filter>SevenZip\UI Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="SevenZip\CPP\7zip\UI\GUI\FM.ico">
@@ -740,6 +743,9 @@
     </ClCompile>
     <ClCompile Include="SevenZip\CPP\Common\DynLimBuf.cpp">
       <Filter>SevenZip\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="SevenZip\CPP\7zip\UI\Common\WimDismCommandLine.cpp">
+      <Filter>SevenZip\UI Common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

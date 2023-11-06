@@ -370,6 +370,18 @@ void DismTestArchives(const UStringVector &arcPaths, bool hashMode)
   MY_TRY_FINISH_VOID
 }
 
+void InfoWimDism(const UStringVector& arcPaths, bool hashMode)
+{
+    MY_TRY_BEGIN
+        UString params('t');
+    if (hashMode)
+    {
+        params += kArchiveTypeSwitch;
+        params += "hash";
+    }
+    DismExtractGroupCommand(arcPaths, params, false);
+    MY_TRY_FINISH_VOID
+}
 
 void DismCalcChecksum(const UStringVector &paths,
     const UString &methodName,

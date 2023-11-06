@@ -18,6 +18,8 @@ HRESULT DismCompressFiles(
 void DismExtractArchives(const UStringVector &arcPaths, const UString &outFolder, bool showDialog, bool elimDup, UInt32 writeZone);
 void DismTestArchives(const UStringVector &arcPaths, bool hashMode = false);
 
+void InfoWimDism(const UStringVector& arcPaths, bool hashMode = false);
+
 void DismCalcChecksum(const UStringVector &paths,
     const UString &methodName,
     const UString &arcPathPrefix,
