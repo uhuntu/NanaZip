@@ -422,6 +422,9 @@
     <None Include="SevenZip\CPP\7zip\GuiCommon.rc">
       <Filter>SevenZip\CPP\7zip</Filter>
     </None>
+    <ResourceCompile Include="SevenZip\CPP\7zip\UI\FileManager\BrowseDialog.rc">
+      <Filter>SevenZip\CPP\7zip\UI\FileManager</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="NanaZip.Core.Sfx.Windows.manifest" />

@@ -184,6 +184,7 @@
     <ResourceCompile Include="SevenZip\CPP\7zip\Bundles\SFXWin\resource.rc" />
     <None Include="SevenZip\CPP\7zip\GuiCommon.rc" />
     <ResourceCompile Include="NanaZip.Core.Sfx.Windows.Resources.rc" />
+    <ResourceCompile Include="SevenZip\CPP\7zip\UI\FileManager\BrowseDialog.rc" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="NanaZip.Core.Sfx.Windows.manifest" />
