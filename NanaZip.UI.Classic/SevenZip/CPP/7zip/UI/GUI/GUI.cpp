@@ -21,6 +21,7 @@
 #include "../../../Windows/NtCheck.h"
 
 #include "../Common/ArchiveCommandLine.h"
+#include "../Common/WimDismCommandLine.h"
 #include "../Common/ExitCode.h"
 
 #include "../FileManager/StringUtils.h"

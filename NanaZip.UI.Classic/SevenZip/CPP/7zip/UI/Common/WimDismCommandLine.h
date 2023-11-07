@@ -14,39 +14,40 @@
 
 typedef CMessagePathException DismCArcCmdLineException;
 
-namespace NCommandType { enum EEnum
+namespace NDismCommandType { enum EEnum
 {
-  kAdd = 0,
-  kUpdate,
-  kDelete,
-  kTest,
-  kExtract,
-  kExtractFull,
-  kList,
-  kBenchmark,
-  kInfo,
-  kHash,
-  kRename
+  kDismAdd = 0,
+  kDismUpdate,
+  kDismDelete,
+  kDismTest,
+  kDismExtract,
+  kDismExtractFull,
+  kDismList,
+  kDismBenchmark,
+  kDismInfo,
+  kDismHash,
+  kDismRename
 };}
 
-struct DismCArcCommand
+struct CWimCommand
 {
-  NCommandType::EEnum CommandType;
+  NDismCommandType::EEnum CommandType;
 
   bool IsFromExtractGroup() const;
+  bool IsFromWimDismGroup() const;
   bool IsFromUpdateGroup() const;
-  bool IsTestCommand() const { return CommandType == NCommandType::kTest; }
+  bool IsTestCommand() const { return CommandType == NDismCommandType::kDismTest; }
   NExtract::NPathMode::EEnum GetPathMode() const;
 };
 
 enum
 {
-  k_OutStream_disabled = 0,
-  k_OutStream_stdout = 1,
-  k_OutStream_stderr = 2
+  k_DismOutStream_disabled = 0,
+  k_DismOutStream_stdout = 1,
+  k_DismOutStream_stderr = 2
 };
 
-struct DismCArcCmdLineOptions
+struct CWimCmdLineOptions
 {
   bool HelpMode;
 
@@ -72,7 +73,7 @@ struct DismCArcCmdLineOptions
 
   NWildcard::CCensor Censor;
 
-  DismCArcCommand Command;
+  CWimCommand Command;
   UString ArchiveName;
 
   #ifndef _NO_CRYPTO
@@ -117,7 +118,7 @@ struct DismCArcCmdLineOptions
   UInt32 NumIterations;
   bool NumIterations_Defined;
 
-  DismCArcCmdLineOptions():
+  CWimCmdLineOptions():
       HelpMode(false),
       // LargePages(false),
       CaseSensitive_Change(false),
@@ -139,22 +140,22 @@ struct DismCArcCmdLineOptions
 
       ConsoleCodePage(-1),
 
-      Number_for_Out(k_OutStream_stdout),
-      Number_for_Errors(k_OutStream_stderr),
-      Number_for_Percents(k_OutStream_stdout),
+      Number_for_Out(k_DismOutStream_stdout),
+      Number_for_Errors(k_DismOutStream_stderr),
+      Number_for_Percents(k_DismOutStream_stdout),
 
       LogLevel(0)
   {
   };
 };
 
-class DismCArcCmdLineParser
+class CWimCmdLineParser
 {
   NCommandLineParser::CParser parser;
 public:
   UString Parse1Log;
-  void Parse1(const UStringVector &commandStrings, DismCArcCmdLineOptions &options);
-  void Parse2(DismCArcCmdLineOptions&options);
+  void Parse1(const UStringVector &commandStrings, CWimCmdLineOptions &options);
+  void Parse2(CWimCmdLineOptions&options);
 };
 
 #endif

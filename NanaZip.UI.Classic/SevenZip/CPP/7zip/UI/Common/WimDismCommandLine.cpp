@@ -91,7 +91,7 @@ static bool StringToUInt32(const wchar_t *s, UInt32 &v)
 }
 
 
-namespace DismNKey {
+namespace NDismKey {
 enum Enum
 {
   kHelp1 = 0,
@@ -338,39 +338,52 @@ static const char * const kTerminalOutError = "I won't write compressed data to 
 static const char * const kSameTerminalError = "I won't write data and program's messages to same stream";
 static const char * const kEmptyFilePath = "Empty file path";
 
-bool DismCArcCommand::IsFromExtractGroup() const
+bool CWimCommand::IsFromExtractGroup() const
 {
   switch (CommandType)
   {
-    case NCommandType::kTest:
-    case NCommandType::kExtract:
-    case NCommandType::kExtractFull:
+    case NDismCommandType::kDismTest:
+    case NDismCommandType::kDismExtract:
+    case NDismCommandType::kDismExtractFull:
       return true;
     default:
       return false;
   }
 }
 
-NExtract::NPathMode::EEnum DismCArcCommand::GetPathMode() const
+bool CWimCommand::IsFromWimDismGroup() const
+{
+    switch (CommandType)
+    {
+    case NDismCommandType::kDismTest:
+    case NDismCommandType::kDismExtract:
+    case NDismCommandType::kDismExtractFull:
+        return true;
+    default:
+        return false;
+    }
+}
+
+NExtract::NPathMode::EEnum CWimCommand::GetPathMode() const
 {
   switch (CommandType)
   {
-    case NCommandType::kTest:
-    case NCommandType::kExtractFull:
+    case NDismCommandType::kDismTest:
+    case NDismCommandType::kDismExtractFull:
       return NExtract::NPathMode::kFullPaths;
     default:
       return NExtract::NPathMode::kNoPaths;
   }
 }
 
-bool DismCArcCommand::IsFromUpdateGroup() const
+bool CWimCommand::IsFromUpdateGroup() const
 {
   switch (CommandType)
   {
-    case NCommandType::kAdd:
-    case NCommandType::kUpdate:
-    case NCommandType::kDelete:
-    case NCommandType::kRename:
+    case NDismCommandType::kDismAdd:
+    case NDismCommandType::kDismUpdate:
+    case NDismCommandType::kDismDelete:
+    case NDismCommandType::kDismRename:
       return true;
     default:
       return false;
@@ -392,7 +405,7 @@ static NRecursedType::EEnum GetRecursedTypeFromIndex(int index)
 
 static const char *g_Commands = "audtexlbih";
 
-static bool ParseArchiveCommand(const UString &commandString, DismCArcCommand &command)
+static bool ParseArchiveCommand(const UString &commandString, CWimCommand &command)
 {
   UString s (commandString);
   s.MakeLower_Ascii();
@@ -403,12 +416,12 @@ static bool ParseArchiveCommand(const UString &commandString, DismCArcCommand &c
     int index = FindCharPosInString(g_Commands, (char)s[0]);
     if (index < 0)
       return false;
-    command.CommandType = (NCommandType::EEnum)index;
+    command.CommandType = (NDismCommandType::EEnum)index;
     return true;
   }
   if (s.Len() == 2 && s[0] == 'r' && s[1] == 'n')
   {
-    command.CommandType = (NCommandType::kRename);
+    command.CommandType = (NDismCommandType::kDismRename);
     return true;
   }
   return false;
@@ -900,17 +913,17 @@ static void ParseUpdateCommandString(CUpdateOptions &options,
 bool ParseComplexSize(const wchar_t *s, UInt64 &result);
 
 static void SetAddCommandOptions(
-    NCommandType::EEnum commandType,
+    NDismCommandType::EEnum commandType,
     const CParser &parser,
     CUpdateOptions &options)
 {
   NUpdateArchive::CActionSet defaultActionSet;
   switch (commandType)
   {
-    case NCommandType::kAdd:
+    case NDismCommandType::kDismAdd:
       defaultActionSet = NUpdateArchive::k_ActionSet_Add;
       break;
-    case NCommandType::kDelete:
+    case NDismCommandType::kDismDelete:
       defaultActionSet = NUpdateArchive::k_ActionSet_Delete;
       break;
     default:
@@ -923,24 +936,24 @@ static void SetAddCommandOptions(
   CUpdateArchiveCommand updateMainCommand;
   updateMainCommand.ActionSet = defaultActionSet;
   options.Commands.Add(updateMainCommand);
-  if (parser[DismNKey::kUpdate].ThereIs)
-    ParseUpdateCommandString(options, parser[DismNKey::kUpdate].PostStrings,
+  if (parser[NDismKey::kUpdate].ThereIs)
+    ParseUpdateCommandString(options, parser[NDismKey::kUpdate].PostStrings,
         defaultActionSet);
-  if (parser[DismNKey::kWorkingDir].ThereIs)
+  if (parser[NDismKey::kWorkingDir].ThereIs)
   {
-    const UString &postString = parser[DismNKey::kWorkingDir].PostStrings[0];
+    const UString &postString = parser[NDismKey::kWorkingDir].PostStrings[0];
     if (postString.IsEmpty())
       NDir::MyGetTempPath(options.WorkingDir);
     else
       options.WorkingDir = us2fs(postString);
   }
-  options.SfxMode = parser[DismNKey::kSfx].ThereIs;
+  options.SfxMode = parser[NDismKey::kSfx].ThereIs;
   if (options.SfxMode)
-    options.SfxModule = us2fs(parser[DismNKey::kSfx].PostStrings[0]);
+    options.SfxModule = us2fs(parser[NDismKey::kSfx].PostStrings[0]);
 
-  if (parser[DismNKey::kVolume].ThereIs)
+  if (parser[NDismKey::kVolume].ThereIs)
   {
-    const UStringVector &sv = parser[DismNKey::kVolume].PostStrings;
+    const UStringVector &sv = parser[NDismKey::kVolume].PostStrings;
     FOR_VECTOR (i, sv)
     {
       UInt64 size;
@@ -953,12 +966,12 @@ static void SetAddCommandOptions(
 
 static void SetMethodOptions(const CParser &parser, CObjectVector<CProperty> &properties)
 {
-  if (parser[DismNKey::kProperty].ThereIs)
+  if (parser[NDismKey::kProperty].ThereIs)
   {
-    FOR_VECTOR (i, parser[DismNKey::kProperty].PostStrings)
+    FOR_VECTOR (i, parser[NDismKey::kProperty].PostStrings)
     {
       CProperty prop;
-      prop.Name = parser[DismNKey::kProperty].PostStrings[i];
+      prop.Name = parser[NDismKey::kProperty].PostStrings[i];
       int index = prop.Name.Find(L'=');
       if (index >= 0)
       {
@@ -988,8 +1001,8 @@ static void PrintHex(UString &s, UInt64 v)
 #endif
 
 
-void DismCArcCmdLineParser::Parse1(const UStringVector &commandStrings,
-    DismCArcCmdLineOptions &options)
+void CWimCmdLineParser::Parse1(const UStringVector &commandStrings,
+    CWimCmdLineOptions &options)
 {
   Parse1Log.Empty();
   if (!parser.ParseStrings(kSwitchForms, ARRAY_SIZE(kSwitchForms), commandStrings))
@@ -999,34 +1012,34 @@ void DismCArcCmdLineParser::Parse1(const UStringVector &commandStrings,
   options.IsStdOutTerminal = MY_IS_TERMINAL(stdout);
   options.IsStdErrTerminal = MY_IS_TERMINAL(stderr);
 
-  options.HelpMode = parser[DismNKey::kHelp1].ThereIs || parser[DismNKey::kHelp2].ThereIs  || parser[DismNKey::kHelp3].ThereIs;
+  options.HelpMode = parser[NDismKey::kHelp1].ThereIs || parser[NDismKey::kHelp2].ThereIs  || parser[NDismKey::kHelp3].ThereIs;
 
-  options.StdInMode = parser[DismNKey::kStdIn].ThereIs;
-  options.StdOutMode = parser[DismNKey::kStdOut].ThereIs;
-  options.EnableHeaders = !parser[DismNKey::kDisableHeaders].ThereIs;
-  if (parser[DismNKey::kListFields].ThereIs)
+  options.StdInMode = parser[NDismKey::kStdIn].ThereIs;
+  options.StdOutMode = parser[NDismKey::kStdOut].ThereIs;
+  options.EnableHeaders = !parser[NDismKey::kDisableHeaders].ThereIs;
+  if (parser[NDismKey::kListFields].ThereIs)
   {
-    const UString &s = parser[DismNKey::kListFields].PostStrings[0];
+    const UString &s = parser[NDismKey::kListFields].PostStrings[0];
     options.ListFields = GetAnsiString(s);
   }
-  options.TechMode = parser[DismNKey::kTechMode].ThereIs;
-  options.ShowTime = parser[DismNKey::kShowTime].ThereIs;
+  options.TechMode = parser[NDismKey::kTechMode].ThereIs;
+  options.ShowTime = parser[NDismKey::kShowTime].ThereIs;
 
-  if (parser[DismNKey::kDisablePercents].ThereIs
+  if (parser[NDismKey::kDisablePercents].ThereIs
       || options.StdOutMode
       || !options.IsStdOutTerminal)
-    options.Number_for_Percents = k_OutStream_disabled;
+    options.Number_for_Percents = k_DismOutStream_disabled;
 
   if (options.StdOutMode)
-    options.Number_for_Out = k_OutStream_disabled;
+    options.Number_for_Out = k_DismOutStream_disabled;
 
-  SetStreamMode(parser[DismNKey::kOutStream], options.Number_for_Out);
-  SetStreamMode(parser[DismNKey::kErrStream], options.Number_for_Errors);
-  SetStreamMode(parser[DismNKey::kPercentStream], options.Number_for_Percents);
+  SetStreamMode(parser[NDismKey::kOutStream], options.Number_for_Out);
+  SetStreamMode(parser[NDismKey::kErrStream], options.Number_for_Errors);
+  SetStreamMode(parser[NDismKey::kPercentStream], options.Number_for_Percents);
 
-  if (parser[DismNKey::kLogLevel].ThereIs)
+  if (parser[NDismKey::kLogLevel].ThereIs)
   {
-    const UString &s = parser[DismNKey::kLogLevel].PostStrings[0];
+    const UString &s = parser[NDismKey::kLogLevel].PostStrings[0];
     if (s.IsEmpty())
       options.LogLevel = 1;
     else
@@ -1038,10 +1051,10 @@ void DismCArcCmdLineParser::Parse1(const UStringVector &commandStrings,
     }
   }
 
-  if (parser[DismNKey::kCaseSensitive].ThereIs)
+  if (parser[NDismKey::kCaseSensitive].ThereIs)
   {
     options.CaseSensitive =
-    g_CaseSensitive = !parser[DismNKey::kCaseSensitive].WithMinus;
+    g_CaseSensitive = !parser[NDismKey::kCaseSensitive].WithMinus;
     options.CaseSensitive_Change = true;
   }
 
@@ -1052,10 +1065,10 @@ void DismCArcCmdLineParser::Parse1(const UStringVector &commandStrings,
 
   // options.LargePages = false;
 
-  if (parser[DismNKey::kLargePages].ThereIs)
+  if (parser[NDismKey::kLargePages].ThereIs)
   {
     unsigned slp = 0;
-    const UString &s = parser[DismNKey::kLargePages].PostStrings[0];
+    const UString &s = parser[NDismKey::kLargePages].PostStrings[0];
     if (s.IsEmpty())
       slp = 1;
     else if (s != L"-")
@@ -1090,9 +1103,9 @@ void DismCArcCmdLineParser::Parse1(const UStringVector &commandStrings,
 
   #ifndef UNDER_CE
 
-  if (parser[DismNKey::kAffinity].ThereIs)
+  if (parser[NDismKey::kAffinity].ThereIs)
   {
-    const UString &s = parser[DismNKey::kAffinity].PostStrings[0];
+    const UString &s = parser[NDismKey::kAffinity].PostStrings[0];
     if (!s.IsEmpty())
     {
       AString a;
@@ -1216,7 +1229,7 @@ static void SetBoolPair(NCommandLineParser::CParser &parser, unsigned switchID, 
     bp.Val = !parser[switchID].WithMinus;
 }
 
-void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
+void CWimCmdLineParser::Parse2(CWimCmdLineOptions &options)
 {
   const UStringVector &nonSwitchStrings = parser.NonSwitchStrings;
   const unsigned numNonSwitchStrings = nonSwitchStrings.Size();
@@ -1226,13 +1239,13 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
   if (!ParseArchiveCommand(nonSwitchStrings[kCommandIndex], options.Command))
     throw DismCArcCmdLineException("Unsupported command:", nonSwitchStrings[kCommandIndex]);
 
-  if (parser[DismNKey::kHash].ThereIs)
-    options.HashMethods = parser[DismNKey::kHash].PostStrings;
+  if (parser[NDismKey::kHash].ThereIs)
+    options.HashMethods = parser[NDismKey::kHash].PostStrings;
 
   /*
-  if (parser[DismNKey::kHashGenFile].ThereIs)
+  if (parser[NDismKey::kHashGenFile].ThereIs)
   {
-    const UString &s = parser[DismNKey::kHashGenFile].PostStrings[0];
+    const UString &s = parser[NDismKey::kHashGenFile].PostStrings[0];
     for (unsigned i = 0 ; i < s.Len();)
     {
       const wchar_t c = s[i++];
@@ -1247,21 +1260,21 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
   }
   */
 
-  if (parser[DismNKey::kHashDir].ThereIs)
-    options.ExtractOptions.HashDir = parser[DismNKey::kHashDir].PostStrings[0];
+  if (parser[NDismKey::kHashDir].ThereIs)
+    options.ExtractOptions.HashDir = parser[NDismKey::kHashDir].PostStrings[0];
 
-  if (parser[DismNKey::kElimDup].ThereIs)
+  if (parser[NDismKey::kElimDup].ThereIs)
   {
     options.ExtractOptions.ElimDup.Def = true;
-    options.ExtractOptions.ElimDup.Val = !parser[DismNKey::kElimDup].WithMinus;
+    options.ExtractOptions.ElimDup.Val = !parser[NDismKey::kElimDup].WithMinus;
   }
 
   NWildcard::ECensorPathMode censorPathMode = NWildcard::k_RelatPath;
-  bool fullPathMode = parser[DismNKey::kFullPathMode].ThereIs;
+  bool fullPathMode = parser[NDismKey::kFullPathMode].ThereIs;
   if (fullPathMode)
   {
     censorPathMode = NWildcard::k_AbsPath;
-    const UString &s = parser[DismNKey::kFullPathMode].PostStrings[0];
+    const UString &s = parser[NDismKey::kFullPathMode].PostStrings[0];
     if (!s.IsEmpty())
     {
       if (s == L"2")
@@ -1271,20 +1284,20 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     }
   }
 
-  if (parser[DismNKey::kNameTrailReplace].ThereIs)
-    g_PathTrailReplaceMode = !parser[DismNKey::kNameTrailReplace].WithMinus;
+  if (parser[NDismKey::kNameTrailReplace].ThereIs)
+    g_PathTrailReplaceMode = !parser[NDismKey::kNameTrailReplace].WithMinus;
 
   CNameOption nop;
 
-  if (parser[DismNKey::kRecursed].ThereIs)
-    nop.RecursedType = GetRecursedTypeFromIndex(parser[DismNKey::kRecursed].PostCharIndex);
+  if (parser[NDismKey::kRecursed].ThereIs)
+    nop.RecursedType = GetRecursedTypeFromIndex(parser[NDismKey::kRecursed].PostCharIndex);
 
-  if (parser[DismNKey::kDisableWildcardParsing].ThereIs)
+  if (parser[NDismKey::kDisableWildcardParsing].ThereIs)
     nop.WildcardMatching = false;
 
-  if (parser[DismNKey::kUseSlashMark].ThereIs)
+  if (parser[NDismKey::kUseSlashMark].ThereIs)
   {
-    const UString &s = parser[DismNKey::kUseSlashMark].PostStrings[0];
+    const UString &s = parser[NDismKey::kUseSlashMark].PostStrings[0];
     if (s.IsEmpty())
       nop.MarkMode = NWildcard::kMark_StrictFile;
     else if (s.IsEqualTo_Ascii_NoCase("-"))
@@ -1296,42 +1309,43 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
   }
 
 
-  options.ConsoleCodePage = FindCharset(parser, DismNKey::kConsoleCharSet, true, -1);
+  options.ConsoleCodePage = FindCharset(parser, NDismKey::kConsoleCharSet, true, -1);
 
-  UInt32 codePage = (UInt32)FindCharset(parser, DismNKey::kListfileCharSet, false, CP_UTF8);
+  UInt32 codePage = (UInt32)FindCharset(parser, NDismKey::kListfileCharSet, false, CP_UTF8);
 
   bool thereAreSwitchIncludes = false;
 
-  if (parser[DismNKey::kInclude].ThereIs)
+  if (parser[NDismKey::kInclude].ThereIs)
   {
     thereAreSwitchIncludes = true;
     nop.Include = true;
     AddSwitchWildcardsToCensor(options.Censor,
-        parser[DismNKey::kInclude].PostStrings, nop, codePage);
+        parser[NDismKey::kInclude].PostStrings, nop, codePage);
   }
 
-  if (parser[DismNKey::kExclude].ThereIs)
+  if (parser[NDismKey::kExclude].ThereIs)
   {
     nop.Include = false;
     AddSwitchWildcardsToCensor(options.Censor,
-        parser[DismNKey::kExclude].PostStrings, nop, codePage);
+        parser[NDismKey::kExclude].PostStrings, nop, codePage);
   }
 
   unsigned curCommandIndex = kCommandIndex + 1;
-  bool thereIsArchiveName = !parser[DismNKey::kNoArName].ThereIs &&
-      options.Command.CommandType != NCommandType::kBenchmark &&
-      options.Command.CommandType != NCommandType::kInfo &&
-      options.Command.CommandType != NCommandType::kHash;
+  bool thereIsArchiveName = !parser[NDismKey::kNoArName].ThereIs &&
+      options.Command.CommandType != NDismCommandType::kDismBenchmark &&
+      options.Command.CommandType != NDismCommandType::kDismInfo &&
+      options.Command.CommandType != NDismCommandType::kDismHash;
 
   const bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
-  const bool isExtractOrList = isExtractGroupCommand || options.Command.CommandType == NCommandType::kList;
-  const bool isRename = options.Command.CommandType == NCommandType::kRename;
+  const bool isWimDismGroupCommand = options.Command.IsFromWimDismGroup();
+  const bool isExtractOrList = isExtractGroupCommand || options.Command.CommandType == NDismCommandType::kDismList;
+  const bool isRename = options.Command.CommandType == NDismCommandType::kDismRename;
 
   if ((isExtractOrList || isRename) && options.StdInMode)
     thereIsArchiveName = false;
 
-  if (parser[DismNKey::kArcNameMode].ThereIs)
-    options.UpdateOptions.ArcNameMode = ParseArcNameMode(parser[DismNKey::kArcNameMode].PostCharIndex);
+  if (parser[NDismKey::kArcNameMode].ThereIs)
+    options.UpdateOptions.ArcNameMode = ParseArcNameMode(parser[NDismKey::kArcNameMode].PostCharIndex);
 
   if (thereIsArchiveName)
   {
@@ -1352,35 +1366,35 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
       nop,
       thereAreSwitchIncludes, codePage);
 
-  options.YesToAll = parser[DismNKey::kYes].ThereIs;
+  options.YesToAll = parser[NDismKey::kYes].ThereIs;
 
 
   #ifndef _NO_CRYPTO
-  options.PasswordEnabled = parser[DismNKey::kPassword].ThereIs;
+  options.PasswordEnabled = parser[NDismKey::kPassword].ThereIs;
   if (options.PasswordEnabled)
-    options.Password = parser[DismNKey::kPassword].PostStrings[0];
+    options.Password = parser[NDismKey::kPassword].PostStrings[0];
   #endif
 
-  options.ShowDialog = parser[DismNKey::kShowDialog].ThereIs;
+  options.ShowDialog = parser[NDismKey::kShowDialog].ThereIs;
 
-  if (parser[DismNKey::kArchiveType].ThereIs)
-    options.ArcType = parser[DismNKey::kArchiveType].PostStrings[0];
+  if (parser[NDismKey::kArchiveType].ThereIs)
+    options.ArcType = parser[NDismKey::kArchiveType].PostStrings[0];
 
-  options.ExcludedArcTypes = parser[DismNKey::kExcludedArcType].PostStrings;
+  options.ExcludedArcTypes = parser[NDismKey::kExcludedArcType].PostStrings;
 
   SetMethodOptions(parser, options.Properties);
 
-  if (parser[DismNKey::kNtSecurity].ThereIs) options.NtSecurity.SetTrueTrue();
+  if (parser[NDismKey::kNtSecurity].ThereIs) options.NtSecurity.SetTrueTrue();
 
-  SetBoolPair(parser, DismNKey::kAltStreams, options.AltStreams);
-  SetBoolPair(parser, DismNKey::kHardLinks, options.HardLinks);
-  SetBoolPair(parser, DismNKey::kSymLinks, options.SymLinks);
+  SetBoolPair(parser, NDismKey::kAltStreams, options.AltStreams);
+  SetBoolPair(parser, NDismKey::kHardLinks, options.HardLinks);
+  SetBoolPair(parser, NDismKey::kSymLinks, options.SymLinks);
 
-  SetBoolPair(parser, DismNKey::kStoreOwnerId, options.StoreOwnerId);
-  SetBoolPair(parser, DismNKey::kStoreOwnerName, options.StoreOwnerName);
+  SetBoolPair(parser, NDismKey::kStoreOwnerId, options.StoreOwnerId);
+  SetBoolPair(parser, NDismKey::kStoreOwnerName, options.StoreOwnerName);
 
   CBoolPair symLinks_AllowDangerous;
-  SetBoolPair(parser, DismNKey::kSymLinks_AllowDangerous, symLinks_AllowDangerous);
+  SetBoolPair(parser, NDismKey::kSymLinks_AllowDangerous, symLinks_AllowDangerous);
 
 
   /*
@@ -1428,21 +1442,21 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
 
       nt.SymLinks_AllowDangerous = symLinks_AllowDangerous;
 
-      nt.ReplaceColonForAltStream = parser[DismNKey::kReplaceColonForAltStream].ThereIs;
-      nt.WriteToAltStreamIfColon = parser[DismNKey::kWriteToAltStreamIfColon].ThereIs;
+      nt.ReplaceColonForAltStream = parser[NDismKey::kReplaceColonForAltStream].ThereIs;
+      nt.WriteToAltStreamIfColon = parser[NDismKey::kWriteToAltStreamIfColon].ThereIs;
 
       nt.ExtractOwner = options.StoreOwnerId.Val; // StoreOwnerName
 
-      if (parser[DismNKey::kPreserveATime].ThereIs)
+      if (parser[NDismKey::kPreserveATime].ThereIs)
         nt.PreserveATime = true;
-      if (parser[DismNKey::kShareForWrite].ThereIs)
+      if (parser[NDismKey::kShareForWrite].ThereIs)
         nt.OpenShareForWrite = true;
     }
 
-    if (parser[DismNKey::kZoneFile].ThereIs)
+    if (parser[NDismKey::kZoneFile].ThereIs)
     {
       eo.ZoneMode = NExtract::NZoneIdMode::kAll;
-      const UString &s = parser[DismNKey::kZoneFile].PostStrings[0];
+      const UString &s = parser[NDismKey::kZoneFile].PostStrings[0];
       if (!s.IsEmpty())
       {
              if (s == L"0") eo.ZoneMode = NExtract::NZoneIdMode::kNone;
@@ -1468,15 +1482,15 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     nopArc.WildcardMatching = nop.WildcardMatching;
     nopArc.MarkMode = nop.MarkMode;
 
-    if (parser[DismNKey::kArInclude].ThereIs)
+    if (parser[NDismKey::kArInclude].ThereIs)
     {
       nopArc.Include = true;
-      AddSwitchWildcardsToCensor(arcCensor, parser[DismNKey::kArInclude].PostStrings, nopArc, codePage);
+      AddSwitchWildcardsToCensor(arcCensor, parser[NDismKey::kArInclude].PostStrings, nopArc, codePage);
     }
-    if (parser[DismNKey::kArExclude].ThereIs)
+    if (parser[NDismKey::kArExclude].ThereIs)
     {
       nopArc.Include = false;
-      AddSwitchWildcardsToCensor(arcCensor, parser[DismNKey::kArExclude].PostStrings, nopArc, codePage);
+      AddSwitchWildcardsToCensor(arcCensor, parser[NDismKey::kArExclude].PostStrings, nopArc, codePage);
     }
 
     if (thereIsArchiveName)
@@ -1494,14 +1508,14 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     arcCensor.ExtendExclude();
 
     if (options.StdInMode)
-      options.ArcName_for_StdInMode = parser[DismNKey::kStdIn].PostStrings.Front();
+      options.ArcName_for_StdInMode = parser[NDismKey::kStdIn].PostStrings.Front();
 
     if (isExtractGroupCommand)
     {
       if (options.StdOutMode)
       {
         if (
-                  options.Number_for_Percents == k_OutStream_stdout
+                  options.Number_for_Percents == k_DismOutStream_stdout
             // || options.Number_for_Out      == k_OutStream_stdout
             // || options.Number_for_Errors   == k_OutStream_stdout
             ||
@@ -1509,7 +1523,7 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
               (options.IsStdOutTerminal && options.IsStdErrTerminal)
               &&
               (
-                      options.Number_for_Percents != k_OutStream_disabled
+                      options.Number_for_Percents != k_DismOutStream_disabled
                 // || options.Number_for_Out      != k_OutStream_disabled
                 // || options.Number_for_Errors   != k_OutStream_disabled
               )
@@ -1518,9 +1532,9 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
           throw DismCArcCmdLineException(kSameTerminalError);
       }
 
-      if (parser[DismNKey::kOutputDir].ThereIs)
+      if (parser[NDismKey::kOutputDir].ThereIs)
       {
-        eo.OutputDir = us2fs(parser[DismNKey::kOutputDir].PostStrings[0]);
+        eo.OutputDir = us2fs(parser[NDismKey::kOutputDir].PostStrings[0]);
         #ifdef _WIN32
           NFile::NName::NormalizeDirSeparators(eo.OutputDir);
         #endif
@@ -1528,9 +1542,9 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
       }
 
       eo.OverwriteMode = NExtract::NOverwriteMode::kAsk;
-      if (parser[DismNKey::kOverwrite].ThereIs)
+      if (parser[NDismKey::kOverwrite].ThereIs)
       {
-        eo.OverwriteMode = k_OverwriteModes[(unsigned)parser[DismNKey::kOverwrite].PostCharIndex];
+        eo.OverwriteMode = k_OverwriteModes[(unsigned)parser[NDismKey::kOverwrite].PostCharIndex];
         eo.OverwriteMode_Force = true;
       }
       else if (options.YesToAll)
@@ -1554,7 +1568,7 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
   }
   else if (options.Command.IsFromUpdateGroup())
   {
-    if (parser[DismNKey::kArInclude].ThereIs)
+    if (parser[NDismKey::kArInclude].ThereIs)
       throw DismCArcCmdLineException("-ai switch is not supported for this command");
 
     CUpdateOptions &updateOptions = options.UpdateOptions;
@@ -1563,11 +1577,11 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
 
     updateOptions.MethodMode.Properties = options.Properties;
 
-    if (parser[DismNKey::kPreserveATime].ThereIs)
+    if (parser[NDismKey::kPreserveATime].ThereIs)
       updateOptions.PreserveATime = true;
-    if (parser[DismNKey::kShareForWrite].ThereIs)
+    if (parser[NDismKey::kShareForWrite].ThereIs)
       updateOptions.OpenShareForWrite = true;
-    if (parser[DismNKey::kStopAfterOpenError].ThereIs)
+    if (parser[NDismKey::kStopAfterOpenError].ThereIs)
       updateOptions.StopAfterOpenError = true;
 
     updateOptions.PathMode = censorPathMode;
@@ -1580,10 +1594,10 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     updateOptions.StoreOwnerId = options.StoreOwnerId;
     updateOptions.StoreOwnerName = options.StoreOwnerName;
 
-    updateOptions.EMailMode = parser[DismNKey::kEmail].ThereIs;
+    updateOptions.EMailMode = parser[NDismKey::kEmail].ThereIs;
     if (updateOptions.EMailMode)
     {
-      updateOptions.EMailAddress = parser[DismNKey::kEmail].PostStrings.Front();
+      updateOptions.EMailAddress = parser[NDismKey::kEmail].PostStrings.Front();
       if (updateOptions.EMailAddress.Len() > 0)
         if (updateOptions.EMailAddress[0] == L'.')
         {
@@ -1595,8 +1609,8 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     updateOptions.StdOutMode = options.StdOutMode;
     updateOptions.StdInMode = options.StdInMode;
 
-    updateOptions.DeleteAfterCompressing = parser[DismNKey::kDeleteAfterCompressing].ThereIs;
-    updateOptions.SetArcMTime = parser[DismNKey::kSetArcMTime].ThereIs;
+    updateOptions.DeleteAfterCompressing = parser[NDismKey::kDeleteAfterCompressing].ThereIs;
+    updateOptions.SetArcMTime = parser[NDismKey::kSetArcMTime].ThereIs;
 
     if (updateOptions.StdOutMode && updateOptions.EMailMode)
       throw DismCArcCmdLineException("stdout mode and email mode cannot be combined");
@@ -1606,20 +1620,20 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
       if (options.IsStdOutTerminal)
         throw DismCArcCmdLineException(kTerminalOutError);
 
-      if (options.Number_for_Percents == k_OutStream_stdout
-          || options.Number_for_Out == k_OutStream_stdout
-          || options.Number_for_Errors == k_OutStream_stdout)
+      if (options.Number_for_Percents == k_DismOutStream_stdout
+          || options.Number_for_Out == k_DismOutStream_stdout
+          || options.Number_for_Errors == k_DismOutStream_stdout)
         throw DismCArcCmdLineException(kSameTerminalError);
     }
 
     if (updateOptions.StdInMode)
-      updateOptions.StdInFileName = parser[DismNKey::kStdIn].PostStrings.Front();
+      updateOptions.StdInFileName = parser[NDismKey::kStdIn].PostStrings.Front();
 
-    if (options.Command.CommandType == NCommandType::kRename)
+    if (options.Command.CommandType == NDismCommandType::kDismRename)
       if (updateOptions.Commands.Size() != 1)
         throw DismCArcCmdLineException("Only one archive can be created with rename command");
   }
-  else if (options.Command.CommandType == NCommandType::kBenchmark)
+  else if (options.Command.CommandType == NDismCommandType::kDismBenchmark)
   {
     options.NumIterations = 1;
     options.NumIterations_Defined = false;
@@ -1631,7 +1645,7 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
       options.NumIterations_Defined = true;
     }
   }
-  else if (options.Command.CommandType == NCommandType::kHash)
+  else if (options.Command.CommandType == NDismCommandType::kDismHash)
   {
     options.Censor.AddPathsToCensor(censorPathMode);
     options.Censor.ExtendExclude();
@@ -1640,15 +1654,15 @@ void DismCArcCmdLineParser::Parse2(DismCArcCmdLineOptions &options)
     hashOptions.PathMode = censorPathMode;
     hashOptions.Methods = options.HashMethods;
     // hashOptions.HashFilePath = options.HashFilePath;
-    if (parser[DismNKey::kPreserveATime].ThereIs)
+    if (parser[NDismKey::kPreserveATime].ThereIs)
       hashOptions.PreserveATime = true;
-    if (parser[DismNKey::kShareForWrite].ThereIs)
+    if (parser[NDismKey::kShareForWrite].ThereIs)
       hashOptions.OpenShareForWrite = true;
     hashOptions.StdInMode = options.StdInMode;
     hashOptions.AltStreamsMode = options.AltStreams.Val;
     hashOptions.SymLinks = options.SymLinks;
   }
-  else if (options.Command.CommandType == NCommandType::kInfo)
+  else if (options.Command.CommandType == NDismCommandType::kDismInfo)
   {
   }
   else
