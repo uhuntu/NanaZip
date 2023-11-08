@@ -383,6 +383,7 @@ public:
   void ExtractArchives() { GetFocusedPanel().ExtractArchives(); }
   void TestArchives() { GetFocusedPanel().TestArchives(); }
 
+  void MountWimDism() { GetFocusedPanel().MountWimDism(); }
   void InfoWimDism() { GetFocusedPanel().InfoWimDism(); }
 
   void OnNotify(int ctrlID, LPNMHDR pnmh);

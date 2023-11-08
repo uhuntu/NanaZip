@@ -852,6 +852,7 @@ public:
   void ExtractArchives();
   void TestArchives();
 
+  void MountWimDism();
   void InfoWimDism();
 
   HRESULT CopyTo(CCopyToOptions &options,

@@ -15,6 +15,9 @@ HRESULT CompressFiles(
     const UStringVector &names,
     bool email, bool showDialog, bool waitFinish);
 
+void MountWimDism(const UStringVector& arcPaths, const UString& outFolder, bool showDialog, bool elimDup, UInt32 writeZone);
+void InfoWimDism(const UStringVector& arcPaths, bool hashMode = false);
+
 void ExtractArchives(const UStringVector &arcPaths, const UString &outFolder, bool showDialog, bool elimDup, UInt32 writeZone);
 void TestArchives(const UStringVector &arcPaths, bool hashMode = false);
 

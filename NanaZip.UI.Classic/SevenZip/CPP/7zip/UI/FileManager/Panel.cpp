@@ -1052,4 +1052,66 @@ void CPanel::TestArchives()
 
 void CPanel::InfoWimDism()
 {
+    CRecordVector<UInt32> indices;
+    GetOperatedIndicesSmart(indices);
+    CMyComPtr<IArchiveFolder> archiveFolder;
+    _folder.QueryInterface(IID_IArchiveFolder, &archiveFolder);
+    if (archiveFolder)
+    {
+        CCopyToOptions options;
+        options.streamMode = true;
+        options.showErrorMessages = true;
+        options.testMode = true;
+
+        UStringVector messages;
+        HRESULT res = CopyTo(options, indices, &messages);
+        if (res != S_OK)
+        {
+            if (res != E_ABORT)
+                MessageBox_Error_HRESULT(res);
+        }
+        return;
+    }
+
+    if (!IsFSFolder())
+    {
+        MessageBox_Error_UnsupportOperation();
+        return;
+    }
+    UStringVector paths;
+    GetFilePaths(indices, paths, true);
+    if (paths.IsEmpty())
+        return;
+    ::InfoWimDism(paths);
+}
+
+void CPanel::MountWimDism()
+{
+    if (_parentFolders.Size() > 0)
+    {
+        _panelCallback->OnCopy(false, false);
+        return;
+    }
+    CRecordVector<UInt32> indices;
+    GetOperatedItemIndices(indices);
+    UStringVector paths;
+    GetFilePaths(indices, paths);
+    if (paths.IsEmpty())
+        return;
+
+    UString outFolder = GetFsPath();
+    if (indices.Size() == 1)
+        outFolder += GetSubFolderNameForExtract2(GetItemRelPath(indices[0]));
+    else
+        outFolder += '*';
+    outFolder.Add_PathSepar();
+
+    CContextMenuInfo ci;
+    ci.Load();
+
+    ::MountWimDism(paths, outFolder
+        , true // showDialog
+        , false // elimDup
+        , ci.WriteZone
+    );
 }

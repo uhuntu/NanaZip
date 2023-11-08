@@ -334,6 +334,19 @@ static void ExtractGroupCommand(const UStringVector &arcPaths, UString &params, 
     ErrorMessageHRESULT(result);
 }
 
+static void WimDismGroupCommand(const UStringVector& arcPaths, UString& params, bool isHash)
+{
+    AddLagePagesSwitch(params);
+    params += (isHash ? kHashIncludeSwitches : kArcIncludeSwitches);
+    CFileMapping fileMapping;
+    NSynchronization::CManualResetEvent event;
+    HRESULT result = CreateMap(arcPaths, fileMapping, event, params);
+    if (result == S_OK)
+        result = Call7zGui(params, false, &event);
+    if (result != S_OK)
+        ErrorMessageHRESULT(result);
+}
+
 void ExtractArchives(const UStringVector &arcPaths, const UString &outFolder, bool showDialog, bool elimDup, UInt32 writeZone)
 {
   MY_TRY_BEGIN
@@ -356,6 +369,27 @@ void ExtractArchives(const UStringVector &arcPaths, const UString &outFolder, bo
   MY_TRY_FINISH_VOID
 }
 
+void MountWimDism(const UStringVector& arcPaths, const UString& outFolder, bool showDialog, bool elimDup, UInt32 writeZone)
+{
+    MY_TRY_BEGIN
+        UString params('x');
+    if (!outFolder.IsEmpty())
+    {
+        params += " -o";
+        params += GetQuotedString(outFolder);
+    }
+    if (elimDup)
+        params += " -spe";
+    if (writeZone != (UInt32)(Int32)-1)
+    {
+        params += " -snz";
+        params.Add_UInt32(writeZone);
+    }
+    if (showDialog)
+        params += kShowDialogSwitch;
+    WimDismGroupCommand(arcPaths, params, false);
+    MY_TRY_FINISH_VOID
+}
 
 void TestArchives(const UStringVector &arcPaths, bool hashMode)
 {
@@ -370,6 +404,18 @@ void TestArchives(const UStringVector &arcPaths, bool hashMode)
   MY_TRY_FINISH_VOID
 }
 
+void InfoWimDism(const UStringVector& arcPaths, bool hashMode)
+{
+    MY_TRY_BEGIN
+        UString params("wi");
+    if (hashMode)
+    {
+        params += kArchiveTypeSwitch;
+        params += "hash";
+    }
+    WimDismGroupCommand(arcPaths, params, false);
+    MY_TRY_FINISH_VOID
+}
 
 void CalcChecksum(const UStringVector &paths,
     const UString &methodName,

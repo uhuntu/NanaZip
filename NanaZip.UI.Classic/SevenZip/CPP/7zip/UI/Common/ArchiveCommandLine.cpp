@@ -351,6 +351,18 @@ bool CArcCommand::IsFromExtractGroup() const
   }
 }
 
+bool CArcCommand::IsFromWimDismGroup() const
+{
+    switch (CommandType)
+    {
+    case NCommandType::kTest:
+    case NCommandType::kExtract:
+        return true;
+    default:
+        return false;
+    }
+}
+
 NExtract::NPathMode::EEnum CArcCommand::GetPathMode() const
 {
   switch (CommandType)
@@ -1328,7 +1340,7 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
   const bool isRename = options.Command.CommandType == NCommandType::kRename;
 
   if ((isExtractOrList || isRename) && options.StdInMode)
-    thereIsArchiveName = false;
+      thereIsArchiveName = false;
 
   if (parser[NKey::kArcNameMode].ThereIs)
     options.UpdateOptions.ArcNameMode = ParseArcNameMode(parser[NKey::kArcNameMode].PostCharIndex);
