@@ -21,7 +21,6 @@
 #include "../../../Windows/NtCheck.h"
 
 #include "../Common/ArchiveCommandLine.h"
-#include "../Common/WimDismCommandLine.h"
 #include "../Common/ExitCode.h"
 
 #include "../FileManager/StringUtils.h"
@@ -119,7 +118,8 @@ static void ThrowException_if_Error(HRESULT res)
 static int Main2()
 {
   UStringVector commandStrings;
-  NCommandLineParser::SplitCommandLine(GetCommandLineW(), commandStrings);
+  UString commandLine = GetCommandLineW();
+  NCommandLineParser::SplitCommandLine(commandLine, commandStrings);
 
   #ifndef UNDER_CE
   if (commandStrings.Size() > 0)
@@ -129,6 +129,9 @@ static int Main2()
   {
     MessageBoxW(0, L"Specify command", L"NanaZip", 0);
     return 0;
+  }
+  else {
+    MessageBoxW(0, commandLine, L"NanaZip", 0);
   }
 
   CArcCmdLineOptions options;
