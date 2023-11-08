@@ -36,7 +36,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SevenZip\CPP\7zip\UI\Common\WimDismCall.cpp" />
     <ClCompile Include="SevenZip\CPP\7zip\UI\FileManager\PropertyName.cpp" />
     <ClCompile Include="SevenZip\CPP\7zip\UI\FileManager\StringUtils.cpp" />
     <ClCompile Include="SevenZip\C\CpuArch.c" />
@@ -80,7 +79,6 @@
     <ClCompile Include="SevenZip\CPP\7zip\UI\Explorer\StdAfx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SevenZip\CPP\7zip\UI\Common\WimDismCall.h" />
     <ClInclude Include="SevenZip\CPP\7zip\UI\Explorer\MyExplorerCommand.h" />
     <ClInclude Include="SevenZip\CPP\7zip\UI\FileManager\PropertyName.h" />
     <ClInclude Include="SevenZip\CPP\7zip\UI\FileManager\StringUtils.h" />
