@@ -133,7 +133,7 @@ HRESULT CThreadExtracting::ProcessVirt()
       AddSizeValuePair(Pairs, IDS_PROP_PACKED_SIZE, Stat.PackSize);
       AddHashBundleRes(Pairs, *HashBundle);
     }
-    else if (Options->TestMode)
+    else if (Options->TestMode || Options->WimInfoMode)
     {
       UString s;
     
@@ -293,4 +293,137 @@ HRESULT ExtractGUI(
   RINOK(extracter.Create(title, hwndParent));
   messageWasDisplayed = extracter.ThreadFinishedOK && extracter.MessagesDisplayed;
   return extracter.Result;
+}
+
+
+HRESULT WimDismGUI(
+    // DECL_EXTERNAL_CODECS_LOC_VARS
+    CCodecs* codecs,
+    const CObjectVector<COpenType>& formatIndices,
+    const CIntVector& excludedFormatIndices,
+    UStringVector& archivePaths,
+    UStringVector& archivePathsFull,
+    const NWildcard::CCensorNode& wildcardCensor,
+    CExtractOptions& options,
+#ifndef _SFX
+    CHashBundle* hb,
+#endif
+    bool showDialog,
+    bool& messageWasDisplayed,
+    CExtractCallbackImp* extractCallback,
+    HWND hwndParent)
+{
+    messageWasDisplayed = false;
+
+    CThreadExtracting extracter;
+    /*
+    #ifdef EXTERNAL_CODECS
+    extracter.externalCodecs = __externalCodecs;
+    #endif
+    */
+    extracter.codecs = codecs;
+    extracter.FormatIndices = &formatIndices;
+    extracter.ExcludedFormatIndices = &excludedFormatIndices;
+
+    if (!options.WimInfoMode)
+    {
+        FString outputDir = options.OutputDir;
+#ifndef UNDER_CE
+        if (outputDir.IsEmpty())
+            GetCurrentDir(outputDir);
+#endif
+        if (showDialog)
+        {
+            CExtractDialog dialog;
+            FString outputDirFull;
+            if (!MyGetFullPathName(outputDir, outputDirFull))
+            {
+                ShowErrorMessage(kIncorrectOutDir);
+                messageWasDisplayed = true;
+                return E_FAIL;
+            }
+            NName::NormalizeDirPathPrefix(outputDirFull);
+
+            dialog.DirPath = fs2us(outputDirFull);
+
+            dialog.OverwriteMode = options.OverwriteMode;
+            dialog.OverwriteMode_Force = options.OverwriteMode_Force;
+            dialog.PathMode = options.PathMode;
+            dialog.PathMode_Force = options.PathMode_Force;
+            dialog.ElimDup = options.ElimDup;
+
+            if (archivePathsFull.Size() == 1)
+                dialog.ArcPath = archivePathsFull[0];
+
+#ifndef _SFX
+            // dialog.AltStreams = options.NtOptions.AltStreams;
+            dialog.NtSecurity = options.NtOptions.NtSecurity;
+            if (extractCallback->PasswordIsDefined)
+                dialog.Password = extractCallback->Password;
+#endif
+
+            if (dialog.Create(hwndParent) != IDOK)
+                return E_ABORT;
+
+            outputDir = us2fs(dialog.DirPath);
+
+            options.OverwriteMode = dialog.OverwriteMode;
+            options.PathMode = dialog.PathMode;
+            options.ElimDup = dialog.ElimDup;
+
+#ifndef _SFX
+            // options.NtOptions.AltStreams = dialog.AltStreams;
+            options.NtOptions.NtSecurity = dialog.NtSecurity;
+            extractCallback->Password = dialog.Password;
+            extractCallback->PasswordIsDefined = !dialog.Password.IsEmpty();
+#endif
+        }
+        if (!MyGetFullPathName(outputDir, options.OutputDir))
+        {
+            ShowErrorMessage(kIncorrectOutDir);
+            messageWasDisplayed = true;
+            return E_FAIL;
+        }
+        NName::NormalizeDirPathPrefix(options.OutputDir);
+
+        /*
+        if (!CreateComplexDirectory(options.OutputDir))
+        {
+          UString s = GetUnicodeString(NError::MyFormatMessage(GetLastError()));
+          UString s2 = MyFormatNew(IDS_CANNOT_CREATE_FOLDER,
+          #ifdef LANG
+          0x02000603,
+          #endif
+          options.OutputDir);
+          s2.Add_LF();
+          s2 += s;
+          MyMessageBox(s2);
+          return E_FAIL;
+        }
+        */
+    }
+
+    UString title = LangString(options.WimInfoMode ? IDS_PROGRESS_TESTING : IDS_PROGRESS_EXTRACTING);
+
+    extracter.Title = title;
+    extracter.ExtractCallbackSpec = extractCallback;
+    extracter.ExtractCallbackSpec->ProgressDialog = &extracter;
+    extracter.ExtractCallback = extractCallback;
+    extracter.ExtractCallbackSpec->Init();
+
+    extracter.CompressingMode = false;
+
+    extracter.ArchivePaths = &archivePaths;
+    extracter.ArchivePathsFull = &archivePathsFull;
+    extracter.WildcardCensor = &wildcardCensor;
+    extracter.Options = &options;
+#ifndef _SFX
+    extracter.HashBundle = hb;
+#endif
+
+    extracter.IconID = IDI_ICON;
+
+    RINOK(extracter.Create(title, hwndParent));
+    messageWasDisplayed = extracter.ThreadFinishedOK && extracter.MessagesDisplayed;
+    return extracter.Result;
 }

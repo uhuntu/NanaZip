@@ -36,4 +36,21 @@ HRESULT ExtractGUI(
     CExtractCallbackImp *extractCallback,
     HWND hwndParent = NULL);
 
+HRESULT WimDismGUI(
+    // DECL_EXTERNAL_CODECS_LOC_VARS
+    CCodecs* codecs,
+    const CObjectVector<COpenType>& formatIndices,
+    const CIntVector& excludedFormatIndices,
+    UStringVector& archivePaths,
+    UStringVector& archivePathsFull,
+    const NWildcard::CCensorNode& wildcardCensor,
+    CExtractOptions& options,
+#ifndef _SFX
+    CHashBundle* hb,
+#endif
+    bool showDialog,
+    bool& messageWasDisplayed,
+    CExtractCallbackImp* extractCallback,
+    HWND hwndParent = NULL);
+
 #endif

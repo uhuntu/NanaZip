@@ -36,21 +36,32 @@ static INT_PTR APIENTRY DialogProcedure(HWND dialogHWND, UINT message, WPARAM wP
      the dialog manager performs the default dialog operation in response to the message.
   */
 
-  try { return BoolToBOOL(dialog->OnMessage(message, wParam, lParam)); }
-  catch(...) { return TRUE; }
+  try {
+      return BoolToBOOL(dialog->OnMessage(message, wParam, lParam));
+  } catch(...) {
+      return TRUE;
+  }
 }
 
 bool CDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
   switch (message)
   {
-    case WM_INITDIALOG: return OnInit();
-    case WM_COMMAND: return OnCommand(wParam, lParam);
-    case WM_NOTIFY: return OnNotify((UINT)wParam, (LPNMHDR) lParam);
-    case WM_TIMER: return OnTimer(wParam, lParam);
-    case WM_SIZE: return OnSize(wParam, LOWORD(lParam), HIWORD(lParam));
-    case WM_DESTROY: return OnDestroy();
-    default: return false;
+    case WM_INITDIALOG:
+        MessageBoxW(0, L"WM_INITDIALOG", L"NanaZip", 0);
+        return OnInit();
+    case WM_COMMAND:
+        return OnCommand(wParam, lParam);
+    case WM_NOTIFY:
+        return OnNotify((UINT)wParam, (LPNMHDR) lParam);
+    case WM_TIMER:
+        return OnTimer(wParam, lParam);
+    case WM_SIZE:
+        return OnSize(wParam, LOWORD(lParam), HIWORD(lParam));
+    case WM_DESTROY:
+        return OnDestroy();
+    default:
+        return false;
   }
 }
 
@@ -61,8 +72,9 @@ bool CDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
 bool CDialog::OnCommand(int code, int itemID, LPARAM lParam)
 {
-  if (code == BN_CLICKED)
-    return OnButtonClicked(itemID, (HWND)lParam);
+  if (code == BN_CLICKED) {
+      return OnButtonClicked(itemID, (HWND)lParam);
+  }
   return false;
 }
 

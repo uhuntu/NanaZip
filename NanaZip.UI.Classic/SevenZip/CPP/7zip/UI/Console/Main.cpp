@@ -876,6 +876,7 @@ int Main2(
   #endif
 
   const bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
+  const bool isWimDismGroupCommand = options.Command.IsFromWimDismGroup();
 
   if (codecs->Formats.Size() == 0 &&
         (isExtractGroupCommand

@@ -34,6 +34,7 @@ struct CArcCommand
   NCommandType::EEnum CommandType;
 
   bool IsFromExtractGroup() const;
+  bool IsFromWimDismGroup() const;
   bool IsFromUpdateGroup() const;
   bool IsTestCommand() const { return CommandType == NCommandType::kTest; }
   NExtract::NPathMode::EEnum GetPathMode() const;

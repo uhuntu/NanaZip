@@ -355,8 +355,8 @@ bool CArcCommand::IsFromWimDismGroup() const
 {
     switch (CommandType)
     {
-    case NCommandType::kTest:
-    case NCommandType::kExtract:
+    case NCommandType::kMount:
+    case NCommandType::kWimInfo:
         return true;
     default:
         return false;
@@ -402,7 +402,7 @@ static NRecursedType::EEnum GetRecursedTypeFromIndex(int index)
   }
 }
 
-static const char *g_Commands = "audtexlbih";
+static const char *g_Commands = "audtexlbihm";
 
 static bool ParseArchiveCommand(const UString &commandString, CArcCommand &command)
 {
@@ -421,6 +421,11 @@ static bool ParseArchiveCommand(const UString &commandString, CArcCommand &comma
   if (s.Len() == 2 && s[0] == 'r' && s[1] == 'n')
   {
     command.CommandType = (NCommandType::kRename);
+    return true;
+  }
+  if (s.Len() == 2 && s[0] == 'w' && s[1] == 'i')
+  {
+    command.CommandType = (NCommandType::kWimInfo);
     return true;
   }
   return false;
@@ -1336,11 +1341,12 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
       options.Command.CommandType != NCommandType::kHash;
 
   const bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
+  const bool isWimDismGroupCommand = options.Command.IsFromWimDismGroup();
   const bool isExtractOrList = isExtractGroupCommand || options.Command.CommandType == NCommandType::kList;
   const bool isRename = options.Command.CommandType == NCommandType::kRename;
 
-  if ((isExtractOrList || isRename) && options.StdInMode)
-      thereIsArchiveName = false;
+  if ((isWimDismGroupCommand || isExtractOrList || isRename) && options.StdInMode)
+    thereIsArchiveName = false;
 
   if (parser[NKey::kArcNameMode].ThereIs)
     options.UpdateOptions.ArcNameMode = ParseArcNameMode(parser[NKey::kArcNameMode].PostCharIndex);
@@ -1415,7 +1421,7 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
   */
 
 
-  if (isExtractOrList)
+  if (isExtractOrList || isWimDismGroupCommand)
   {
     CExtractOptionsBase &eo = options.ExtractOptions;
 
@@ -1508,7 +1514,7 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
     if (options.StdInMode)
       options.ArcName_for_StdInMode = parser[NKey::kStdIn].PostStrings.Front();
 
-    if (isExtractGroupCommand)
+    if (isExtractGroupCommand || isWimDismGroupCommand)
     {
       if (options.StdOutMode)
       {

@@ -48,6 +48,7 @@ struct CExtractOptions: public CExtractOptionsBase
   bool StdOutMode;
   bool YesToAll;
   bool TestMode;
+  bool WimInfoMode;
 
   // bool ShowDialog;
   // bool PasswordEnabled;
@@ -66,7 +67,8 @@ struct CExtractOptions: public CExtractOptionsBase
       StdInMode(false),
       StdOutMode(false),
       YesToAll(false),
-      TestMode(false)
+      TestMode(false),
+      WimInfoMode(false)
       {}
 };
 
