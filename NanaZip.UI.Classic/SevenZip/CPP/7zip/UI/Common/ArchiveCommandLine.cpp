@@ -402,7 +402,7 @@ static NRecursedType::EEnum GetRecursedTypeFromIndex(int index)
   }
 }
 
-static const char *g_Commands = "audtexlbihm";
+static const char *g_Commands = "audtexlbihmw";
 
 static bool ParseArchiveCommand(const UString &commandString, CArcCommand &command)
 {
@@ -421,11 +421,6 @@ static bool ParseArchiveCommand(const UString &commandString, CArcCommand &comma
   if (s.Len() == 2 && s[0] == 'r' && s[1] == 'n')
   {
     command.CommandType = (NCommandType::kRename);
-    return true;
-  }
-  if (s.Len() == 2 && s[0] == 'w' && s[1] == 'i')
-  {
-    command.CommandType = (NCommandType::kWimInfo);
     return true;
   }
   return false;

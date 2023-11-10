@@ -1439,7 +1439,7 @@ static void AddDefaultMethod(UStringVector &methods, unsigned size)
 
 
 STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testMode, IArchiveExtractCallback *extractCallback)
+    Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback)
 {
   COM_TRY_BEGIN
 
@@ -1548,7 +1548,7 @@ STDMETHODIMP CHandler::Extract(const UInt32 *indices, UInt32 numItems,
       // askMode = NArchive::NExtract::NAskMode::kSkip;
     }
 
-    Int32 askMode = testMode ?
+    Int32 askMode = (testMode || wimInfoMode) ?
         NArchive::NExtract::NAskMode::kTest :
         NArchive::NExtract::NAskMode::kExtract;
 

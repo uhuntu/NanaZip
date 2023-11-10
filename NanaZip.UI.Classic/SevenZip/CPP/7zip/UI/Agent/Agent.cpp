@@ -1455,7 +1455,7 @@ STDMETHODIMP CAgentFolder::Extract(const UInt32 *indices,
     NExtract::NPathMode::EEnum pathMode,
     NExtract::NOverwriteMode::EEnum overwriteMode,
     const wchar_t *path,
-    Int32 testMode,
+    Int32 testMode, Int32 wimInfoMode,
     IFolderArchiveExtractCallback *extractCallback2)
 {
   COM_TRY_BEGIN
@@ -1518,7 +1518,7 @@ STDMETHODIMP CAgentFolder::Extract(const UInt32 *indices,
       NULL, &_agentSpec->GetArc(),
       extractCallback2,
       false, // stdOutMode
-      IntToBool(testMode),
+      IntToBool(testMode), IntToBool(wimInfoMode),
       pathU,
       pathParts, isAltStreamFolder,
       (UInt64)(Int64)-1);
@@ -1547,7 +1547,7 @@ STDMETHODIMP CAgentFolder::Extract(const UInt32 *indices,
     CArchiveExtractCallback_Closer ecsCloser(extractCallbackSpec);
 
     HRESULT res = _agentSpec->GetArchive()->Extract(&realIndices.Front(),
-        realIndices.Size(), testMode, extractCallback);
+        realIndices.Size(), testMode, wimInfoMode, extractCallback);
 
     HRESULT res2 = ecsCloser.Close();
     if (res == S_OK)
@@ -1782,7 +1782,7 @@ STDMETHODIMP CAgent::Extract(
     NExtract::NPathMode::EEnum pathMode,
     NExtract::NOverwriteMode::EEnum overwriteMode,
     const wchar_t *path,
-    Int32 testMode,
+    Int32 testMode, Int32 wimInfoMode,
     IFolderArchiveExtractCallback *extractCallback2)
 {
   COM_TRY_BEGIN
@@ -1809,7 +1809,7 @@ STDMETHODIMP CAgent::Extract(
       NULL, &GetArc(),
       extractCallback2,
       false, // stdOutMode
-      IntToBool(testMode),
+      IntToBool(testMode), IntToBool(wimInfoMode),
       us2fs(path),
       UStringVector(), false,
       (UInt64)(Int64)-1);
@@ -1825,7 +1825,7 @@ STDMETHODIMP CAgent::Extract(
 
   #endif
 
-  return GetArchive()->Extract(0, (UInt32)(Int32)-1, testMode, extractCallback);
+  return GetArchive()->Extract(0, (UInt32)(Int32)-1, testMode, wimInfoMode, extractCallback);
   COM_TRY_END
 }
 

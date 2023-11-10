@@ -19,7 +19,7 @@ API_FUNC_IsArc IsArc_Ext(const Byte *p, size_t size);
 }
 
 Z7_COM7F_IMF(CHandlerCont::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testMode, IArchiveExtractCallback *extractCallback))
+    Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback))
 {
   COM_TRY_BEGIN
   const bool allFilesMode = (numItems == (UInt32)(Int32)-1);
@@ -238,7 +238,7 @@ Z7_COM7F_IMF(CHandlerImgProgress::SetRatioInfo(const UInt64 *inSize, const UInt6
   
 
 Z7_COM7F_IMF(CHandlerImg::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testMode, IArchiveExtractCallback *extractCallback))
+    Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback))
 {
   COM_TRY_BEGIN
   if (numItems == 0)

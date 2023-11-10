@@ -27,8 +27,8 @@ namespace NCommandType { enum EEnum
   kInfo,
   kHash,
   kMount,
-  kRename,
-  kWimInfo
+  kWimInfo,
+  kRename
 };}
 
 struct CArcCommand

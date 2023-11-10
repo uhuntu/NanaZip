@@ -318,7 +318,7 @@ Notes:
   x(Close()) \
   x(GetNumberOfItems(UInt32 *numItems)) \
   x(GetProperty(UInt32 index, PROPID propID, PROPVARIANT *value)) \
-  x(Extract(const UInt32 *indices, UInt32 numItems, Int32 testMode, IArchiveExtractCallback *extractCallback)) \
+  x(Extract(const UInt32 *indices, UInt32 numItems, Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback)) \
   x(GetArchiveProperty(PROPID propID, PROPVARIANT *value)) \
   x(GetNumberOfProperties(UInt32 *numProps)) \
   x(GetPropertyInfo(UInt32 index, BSTR *name, PROPID *propID, VARTYPE *varType)) \

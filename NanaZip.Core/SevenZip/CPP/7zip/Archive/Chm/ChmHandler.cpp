@@ -402,7 +402,7 @@ HRESULT CChmFolderOutStream::FlushCorrupted(UInt64 maxSize)
 
 
 Z7_COM7F_IMF(CHandler::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testModeSpec, IArchiveExtractCallback *extractCallback))
+    Int32 testModeSpec, Int32 wimInfoModeSpec, IArchiveExtractCallback *extractCallback))
 {
   COM_TRY_BEGIN
   const bool allFilesMode = (numItems == (UInt32)(Int32)-1);

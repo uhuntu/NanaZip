@@ -45,6 +45,6 @@ STDMETHODIMP CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 
   return Extract(indices, numItems,
       includeAltStreams, replaceAltStreamCharsMode,
       pathMode, NExtract::NOverwriteMode::kAsk,
-      path, BoolToInt(false), extractCallback2);
+      path, BoolToInt(false), BoolToInt(false), extractCallback2);
   COM_TRY_END
 }

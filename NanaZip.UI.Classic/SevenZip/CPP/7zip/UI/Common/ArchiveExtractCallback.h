@@ -378,6 +378,7 @@ class CArchiveExtractCallback:
 
   bool _stdOutMode;
   bool _testMode;
+  bool _wimInfoMode;
   bool _multiArchives;
 
   CMyComPtr<ICompressProgressInfo> _localProgress;
@@ -482,7 +483,7 @@ public:
       const NWildcard::CCensorNode *wildcardCensor,
       const CArc *arc,
       IFolderArchiveExtractCallback *extractCallback2,
-      bool stdOutMode, bool testMode,
+      bool stdOutMode, bool testMode, bool wimInfoMode,
       const FString &directoryPath,
       const UStringVector &removePathParts, bool removePartsForAltStreams,
       UInt64 packSize);

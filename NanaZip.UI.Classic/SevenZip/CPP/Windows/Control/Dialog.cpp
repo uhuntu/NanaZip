@@ -48,7 +48,6 @@ bool CDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
   switch (message)
   {
     case WM_INITDIALOG:
-        MessageBoxW(0, L"WM_INITDIALOG", L"NanaZip", 0);
         return OnInit();
     case WM_COMMAND:
         return OnCommand(wParam, lParam);

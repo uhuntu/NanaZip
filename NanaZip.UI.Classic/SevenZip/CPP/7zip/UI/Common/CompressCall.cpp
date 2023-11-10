@@ -407,7 +407,7 @@ void TestArchives(const UStringVector &arcPaths, bool hashMode)
 void InfoWimDism(const UStringVector& arcPaths, bool hashMode)
 {
     MY_TRY_BEGIN
-        UString params("wi");
+        UString params('w');
     if (hashMode)
     {
         params += kArchiveTypeSwitch;

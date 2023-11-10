@@ -293,7 +293,7 @@ void CArchiveExtractCallback::Init(
     const NWildcard::CCensorNode *wildcardCensor,
     const CArc *arc,
     IFolderArchiveExtractCallback *extractCallback2,
-    bool stdOutMode, bool testMode,
+    bool stdOutMode, bool testMode, bool wimInfoMode,
     const FString &directoryPath,
     const UStringVector &removePathParts, bool removePartsForAltStreams,
     UInt64 packSize)
@@ -315,6 +315,8 @@ void CArchiveExtractCallback::Init(
 
   _stdOutMode = stdOutMode;
   _testMode = testMode;
+  _wimInfoMode = wimInfoMode;
+
 
   // _progressTotal = 0;
   // _progressTotal_Defined = false;
@@ -1777,7 +1779,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
 
   CMyComPtr<ISequentialOutStream> outStreamLoc;
 
-  if (askExtractMode == NArchive::NExtract::NAskMode::kExtract && !_testMode)
+  if (askExtractMode == NArchive::NExtract::NAskMode::kExtract && !_testMode && !_wimInfoMode)
   {
     if (_stdOutMode)
       outStreamLoc = new CStdOutFileStream;

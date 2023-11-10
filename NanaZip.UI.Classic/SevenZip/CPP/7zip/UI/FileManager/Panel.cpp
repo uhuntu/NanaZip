@@ -1061,7 +1061,7 @@ void CPanel::InfoWimDism()
         CCopyToOptions options;
         options.streamMode = true;
         options.showErrorMessages = true;
-        options.testMode = true;
+        options.wimInfoMode = true;
 
         UStringVector messages;
         HRESULT res = CopyTo(options, indices, &messages);

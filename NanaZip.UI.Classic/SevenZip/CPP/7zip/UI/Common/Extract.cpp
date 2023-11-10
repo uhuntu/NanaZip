@@ -195,7 +195,7 @@ static HRESULT DecompressArchive(
       options.StdInMode ? &wildcardCensor : NULL,
       &arc,
       callback,
-      options.StdOutMode, options.TestMode,
+      options.StdOutMode, options.TestMode, options.WimInfoMode,
       outDir,
       removePathParts, false,
       packSize);
@@ -215,18 +215,19 @@ static HRESULT DecompressArchive(
 
   HRESULT result;
   Int32 testMode = (options.TestMode && !calcCrc) ? 1: 0;
+  Int32 wimInfoMode = (options.WimInfoMode && !calcCrc) ? 1 : 0;
 
   CArchiveExtractCallback_Closer ecsCloser(ecs);
 
   if (options.StdInMode)
   {
-    result = archive->Extract(NULL, (UInt32)(Int32)-1, testMode, ecs);
+    result = archive->Extract(NULL, (UInt32)(Int32)-1, testMode, wimInfoMode, ecs);
     NCOM::CPropVariant prop;
     if (archive->GetArchiveProperty(kpidPhySize, &prop) == S_OK)
       ConvertPropVariantToUInt64(prop, stdInProcessed);
   }
   else
-    result = archive->Extract(&realIndices.Front(), realIndices.Size(), testMode, ecs);
+    result = archive->Extract(&realIndices.Front(), realIndices.Size(), testMode, wimInfoMode, ecs);
 
   HRESULT res2 = ecsCloser.Close();
   if (result == S_OK)

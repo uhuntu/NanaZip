@@ -30,7 +30,7 @@ IArchiveFolder is used by:
       Int32 replaceAltStreamCharsMode, \
       NExtract::NPathMode::EEnum pathMode, \
       NExtract::NOverwriteMode::EEnum overwriteMode, \
-      const wchar_t *path, Int32 testMode, \
+      const wchar_t *path, Int32 testMode, Int32 wimInfoMode, \
       IFolderArchiveExtractCallback *extractCallback2) x; \
 
 FOLDER_ARCHIVE_INTERFACE(IArchiveFolder, 0x0D)
@@ -53,7 +53,7 @@ IInFolderArchive Is used by FAR/Plugin
   STDMETHOD(BindToRootFolder)(IFolderFolder **resultFolder) x; \
   STDMETHOD(Extract)(NExtract::NPathMode::EEnum pathMode, \
       NExtract::NOverwriteMode::EEnum overwriteMode, const wchar_t *path, \
-      Int32 testMode, IFolderArchiveExtractCallback *extractCallback2) x; \
+      Int32 testMode, Int32 wimInfoMode, IFolderArchiveExtractCallback *extractCallback2) x; \
 
 FOLDER_ARCHIVE_INTERFACE(IInFolderArchive, 0x0E)
 {

@@ -366,7 +366,7 @@ STDMETHODIMP CHandler::GetProperty(UInt32 index, PROPID propID, PROPVARIANT *val
 }
 
 HRESULT CHandler::Extract(const UInt32 *indices, UInt32 numItems,
-    Int32 testMode, IArchiveExtractCallback *extractCallback)
+    Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback)
 {
   COM_TRY_BEGIN
 
@@ -413,7 +413,7 @@ HRESULT CHandler::Extract(const UInt32 *indices, UInt32 numItems,
     UInt64 unpackSize = item.Size;
     totalSize += unpackSize;
     bool skipMode = false;
-    if (!testMode && !realOutStream)
+    if (!testMode && !wimInfoMode && !realOutStream)
       continue;
     RINOK(extractCallback->PrepareOperation(askMode));
 
@@ -1621,7 +1621,7 @@ static HRESULT OpenArchiveSpec(IInArchive *archive, bool needPhySize,
       PRF(printf("\n-- !phySize_Defined after Open, call archive->Extract()"));
       // It's for bzip2/gz and some xz archives, where Open operation doesn't know phySize.
       // But the Handler will know phySize after full archive testing.
-      RINOK(archive->Extract(NULL, (UInt32)(Int32)-1, BoolToInt(true), extractCallback));
+      RINOK(archive->Extract(NULL, (UInt32)(Int32)-1, BoolToInt(true), BoolToInt(true), extractCallback));
       PRF(printf("\n-- OK"));
     }
   }

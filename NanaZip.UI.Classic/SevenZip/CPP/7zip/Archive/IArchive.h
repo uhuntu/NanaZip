@@ -1,4 +1,4 @@
-// IArchive.h
+﻿// IArchive.h
 
 #ifndef __IARCHIVE_H
 #define __IARCHIVE_H
@@ -321,7 +321,7 @@ Notes:
   STDMETHOD(Close)() MY_NO_THROW_DECL_ONLY x; \
   STDMETHOD(GetNumberOfItems)(UInt32 *numItems) MY_NO_THROW_DECL_ONLY x; \
   STDMETHOD(GetProperty)(UInt32 index, PROPID propID, PROPVARIANT *value) MY_NO_THROW_DECL_ONLY x; \
-  STDMETHOD(Extract)(const UInt32* indices, UInt32 numItems, Int32 testMode, IArchiveExtractCallback *extractCallback) MY_NO_THROW_DECL_ONLY x; \
+  STDMETHOD(Extract)(const UInt32* indices, UInt32 numItems, Int32 testMode, Int32 wimInfoMode, IArchiveExtractCallback *extractCallback) MY_NO_THROW_DECL_ONLY x; \
   STDMETHOD(GetArchiveProperty)(PROPID propID, PROPVARIANT *value) MY_NO_THROW_DECL_ONLY x; \
   STDMETHOD(GetNumberOfProperties)(UInt32 *numProps) MY_NO_THROW_DECL_ONLY x; \
   STDMETHOD(GetPropertyInfo)(UInt32 index, BSTR *name, PROPID *propID, VARTYPE *varType) MY_NO_THROW_DECL_ONLY x; \

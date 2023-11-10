@@ -81,7 +81,7 @@ HRESULT CPanelCopyThread::ProcessVirt()
     }
   }
 
-  if (options->testMode)
+  if (options->testMode || options->wimInfoMode)
   {
     CMyComPtr<IArchiveFolder> archiveFolder;
     FolderOperations.QueryInterface(IID_IArchiveFolder, &archiveFolder);
@@ -96,7 +96,7 @@ HRESULT CPanelCopyThread::ProcessVirt()
         BoolToInt(options->includeAltStreams),
         BoolToInt(options->replaceAltStreamChars),
         pathMode, NExtract::NOverwriteMode::kAsk,
-        options->folder, BoolToInt(true), extractCallback2);
+        options->folder, BoolToInt(true), BoolToInt(true), extractCallback2);
   }
   else
     result2 = FolderOperations->CopyTo(
@@ -110,7 +110,7 @@ HRESULT CPanelCopyThread::ProcessVirt()
   {
     if (!options->hashMethods.IsEmpty())
       NeedShowRes = true;
-    else if (options->testMode)
+    else if (options->testMode || options->wimInfoMode)
     {
       CProgressMessageBoxPair &pair = GetMessagePair(false); // GetMessagePair(ExtractCallbackSpec->Hash.NumErrors != 0);
       AddHashBundleRes(pair.Message, Hash);
@@ -137,7 +137,7 @@ HRESULT CPanel::CopyTo(CCopyToOptions &options, const CRecordVector<UInt32> &ind
     UStringVector *messages,
     bool &usePassword, UString &password)
 {
-  if (options.NeedRegistryZone && !options.testMode)
+  if (options.NeedRegistryZone && !options.testMode && !options.wimInfoMode)
   {
     CContextMenuInfo ci;
     ci.Load();
@@ -147,7 +147,7 @@ HRESULT CPanel::CopyTo(CCopyToOptions &options, const CRecordVector<UInt32> &ind
 
   if (IsHashFolder())
   {
-    if (!options.testMode)
+    if (!options.testMode && !options.wimInfoMode)
       return E_NOTIMPL;
   }
 
@@ -211,7 +211,7 @@ HRESULT CPanel::CopyTo(CCopyToOptions &options, const CRecordVector<UInt32> &ind
     extracter.Hash.SetMethods(EXTERNAL_CODECS_VARS_G options.hashMethods);
     extracter.ExtractCallbackSpec->SetHashMethods(&extracter.Hash);
   }
-  else if (options.testMode)
+  else if (options.testMode || options.wimInfoMode)
   {
     extracter.ExtractCallbackSpec->SetHashCalc(&extracter.Hash);
   }
@@ -233,8 +233,12 @@ HRESULT CPanel::CopyTo(CCopyToOptions &options, const CRecordVector<UInt32> &ind
           title = s;
       }
     }
-    else if (options.testMode)
+    else if (options.testMode) {
       titleID = IDS_PROGRESS_TESTING;
+    }
+    else if (options.wimInfoMode) {
+      titleID = IDS_PROGRESS_TESTING_DISM;
+    }
 
     if (title.IsEmpty())
       title = LangString(titleID);
