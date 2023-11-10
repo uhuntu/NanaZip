@@ -522,6 +522,9 @@
   <data name="Resource1098" xml:space="preserve">
     <value>Metadata Changed</value>
   </data>
+  <data name="Resource1200" xml:space="preserve">
+    <value>GUID</value>
+  </data>
   <data name="Resource2100" xml:space="preserve">
     <value>Options</value>
   </data>
