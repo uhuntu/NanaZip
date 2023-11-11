@@ -431,6 +431,7 @@ public:
 
   UInt64 NumFolders;
   UInt64 NumFiles;
+  UInt64 WimGuid;
   UInt64 NumAltStreams;
   UInt64 UnpackSize;
   UInt64 AltStreams_UnpackSize;
@@ -454,7 +455,7 @@ public:
      UNUSED_VAR(zoneMode)
    #endif
     _keepAndReplaceEmptyDirPrefixes = keepAndReplaceEmptyDirPrefixes;
-    NumFolders = NumFiles = NumAltStreams = UnpackSize = AltStreams_UnpackSize = 0;
+    NumFolders = NumFiles = WimGuid = NumAltStreams = UnpackSize = AltStreams_UnpackSize = 0;
   }
 
   #ifndef Z7_SFX

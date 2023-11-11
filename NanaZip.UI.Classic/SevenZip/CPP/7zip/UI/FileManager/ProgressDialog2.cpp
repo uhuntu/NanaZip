@@ -205,11 +205,17 @@ void CProgressSync::Set_FilePath(const wchar_t *path, bool isDir)
   _isDir = isDir;
 }
 
+void CProgressSync::AddWarning_Message(const wchar_t* message)
+{
+    CRITICAL_LOCK
+        Messages.Add(message);
+}
 
 void CProgressSync::AddError_Message(const wchar_t *message)
 {
   CRITICAL_LOCK
   Messages.Add(message);
+  ErrorMessages.Add(message);
 }
 
 void CProgressSync::AddError_Message_Name(const wchar_t *message, const wchar_t *name)
@@ -995,10 +1001,12 @@ bool CProgressDialog::OnExternalCloseMessage()
   ProcessWasFinished_GuiVirt();
 
   bool thereAreMessages;
+  bool thereAreErrorMessages;
   CProgressFinalMessage fm;
   {
     NSynchronization::CCriticalSectionLock lock(Sync._cs);
     thereAreMessages = !Sync.Messages.IsEmpty();
+    thereAreErrorMessages = !Sync.ErrorMessages.IsEmpty();
     fm = Sync.FinalMessage;
   }
 
@@ -1009,10 +1017,9 @@ bool CProgressDialog::OnExternalCloseMessage()
       fm.ErrorMessage.Title = "NanaZip";
     MessageBoxW(*this, fm.ErrorMessage.Message, fm.ErrorMessage.Title, MB_ICONERROR);
   }
-  else if (!thereAreMessages)
+  else if (!thereAreErrorMessages)
   {
     MessagesDisplayed = true;
-
     if (!fm.OkMessage.Message.IsEmpty())
     {
       if (fm.OkMessage.Title.IsEmpty())

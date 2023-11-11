@@ -140,7 +140,7 @@ HRESULT CThreadExtracting::ProcessVirt()
       AddValuePair(s, IDS_ARCHIVES_COLON, Stat.NumArchives, false);
       AddSizePair(s, IDS_PROP_PACKED_SIZE, Stat.PackSize);
 
-      AddValuePair(s, IDS_PROP_GUID, Stat.NumFiles);
+      AddValuePair(s, IDS_PROP_GUID, Stat.WimGuid);
 
       if (Stat.NumFolders != 0)
         AddValuePair(s, IDS_PROP_FOLDERS, Stat.NumFolders);

@@ -203,6 +203,20 @@ struct CArcErrorInfo
         || !WarningMessage.IsEmpty();
   }
 
+  bool IsThereError() const
+  {
+      return ErrorFlags != 0
+          || UnexpecedEnd
+          || !ErrorMessage.IsEmpty();
+  }
+
+  bool IsThereWarning() const
+  {
+      return WarningFlags != 0
+          || NeedTailWarning()
+          || !WarningMessage.IsEmpty();
+  }
+
   bool AreThereErrors() const { return ErrorFlags != 0 || UnexpecedEnd; }
   bool AreThereWarnings() const { return WarningFlags != 0 || NeedTailWarning(); }
 

@@ -80,11 +80,12 @@ struct CDecompressStat
   UInt64 PackSize;
   UInt64 NumFolders;
   UInt64 NumFiles;
+  UInt64 WimGuid;
   UInt64 NumAltStreams;
 
   void Clear()
   {
-    NumArchives = UnpackSize = AltStreams_UnpackSize = PackSize = NumFolders = NumFiles = NumAltStreams = 0;
+    NumArchives = UnpackSize = AltStreams_UnpackSize = PackSize = NumFolders = NumFiles = WimGuid = NumAltStreams = 0;
   }
 };
 
