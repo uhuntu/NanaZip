@@ -351,6 +351,18 @@ bool CArcCommand::IsFromExtractGroup() const
   }
 }
 
+bool CArcCommand::IsFromWimDismGroup() const
+{
+    switch (CommandType)
+    {
+    case NCommandType::kMount:
+    case NCommandType::kWimInfo:
+        return true;
+    default:
+        return false;
+    }
+}
+
 NExtract::NPathMode::EEnum CArcCommand::GetPathMode() const
 {
   switch (CommandType)
@@ -390,7 +402,7 @@ static NRecursedType::EEnum GetRecursedTypeFromIndex(int index)
   }
 }
 
-static const char *g_Commands = "audtexlbih";
+static const char *g_Commands = "audtexlbihmw";
 
 static bool ParseArchiveCommand(const UString &commandString, CArcCommand &command)
 {
@@ -1324,10 +1336,11 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
       options.Command.CommandType != NCommandType::kHash;
 
   const bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
+  const bool isWimDismGroupCommand = options.Command.IsFromWimDismGroup();
   const bool isExtractOrList = isExtractGroupCommand || options.Command.CommandType == NCommandType::kList;
   const bool isRename = options.Command.CommandType == NCommandType::kRename;
 
-  if ((isExtractOrList || isRename) && options.StdInMode)
+  if ((isWimDismGroupCommand || isExtractOrList || isRename) && options.StdInMode)
     thereIsArchiveName = false;
 
   if (parser[NKey::kArcNameMode].ThereIs)
@@ -1403,7 +1416,7 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
   */
 
 
-  if (isExtractOrList)
+  if (isExtractOrList || isWimDismGroupCommand)
   {
     CExtractOptionsBase &eo = options.ExtractOptions;
 
@@ -1496,7 +1509,7 @@ void CArcCmdLineParser::Parse2(CArcCmdLineOptions &options)
     if (options.StdInMode)
       options.ArcName_for_StdInMode = parser[NKey::kStdIn].PostStrings.Front();
 
-    if (isExtractGroupCommand)
+    if (isExtractGroupCommand || isWimDismGroupCommand)
     {
       if (options.StdOutMode)
       {

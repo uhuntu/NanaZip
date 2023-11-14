@@ -49,6 +49,7 @@ public:
   bool _isDir;
 
   UStringVector Messages;
+  UStringVector ErrorMessages;
   CProgressFinalMessage FinalMessage;
 
   NWindows::NSynchronization::CCriticalSection _cs;
@@ -94,6 +95,7 @@ public:
   HRESULT Set_Status2(const UString &s, const wchar_t *path, bool isDir = false);
   void Set_FilePath(const wchar_t *path, bool isDir = false);
 
+  void AddWarning_Message(const wchar_t* message);
   void AddError_Message(const wchar_t *message);
   void AddError_Message_Name(const wchar_t *message, const wchar_t *name);
   void AddError_Code_Name(DWORD systemError, const wchar_t *name);

@@ -26,6 +26,8 @@ namespace NCommandType { enum EEnum
   kBenchmark,
   kInfo,
   kHash,
+  kMount,
+  kWimInfo,
   kRename
 };}
 
@@ -34,8 +36,10 @@ struct CArcCommand
   NCommandType::EEnum CommandType;
 
   bool IsFromExtractGroup() const;
+  bool IsFromWimDismGroup() const;
   bool IsFromUpdateGroup() const;
   bool IsTestCommand() const { return CommandType == NCommandType::kTest; }
+  bool IsWimInfoCommand() const { return CommandType == NCommandType::kWimInfo; }
   NExtract::NPathMode::EEnum GetPathMode() const;
 };
 

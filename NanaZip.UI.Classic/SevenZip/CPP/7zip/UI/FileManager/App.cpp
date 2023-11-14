@@ -202,6 +202,14 @@ static const CButtonInfo g_ArchiveButtons[] =
   { kMenuCmdID_Toolbar_Test,    IDB_TEST,    IDB_TEST2,    IDS_TEST }
 };
 
+static const CButtonInfo g_WimDismButtons[] =
+{
+  { kMenuCmdID_WimDism_Mount,   IDB_MOUNT,   IDB_MOUNT2,   IDS_MOUNT },
+  { kMenuCmdID_WimDism_New,     IDB_NEW,     IDB_NEW2,     IDS_NEW },
+  { kMenuCmdID_WimDism_Expand,  IDB_EXPAND,  IDB_EXPAND2,  IDS_EXPAND },
+  { kMenuCmdID_WimDism_WimInfo, IDB_WIMINFO, IDB_WIMINFO2, IDS_WIMINFO }
+};
+
 static bool SetButtonText(int commandID, const CButtonInfo *buttons, unsigned numButtons, UString &s)
 {
   for (unsigned i = 0; i < numButtons; i++)
@@ -273,7 +281,7 @@ void CApp::ReloadToolbars()
   _toolBar.Destroy();
 
 
-  if (ShowArchiveToolbar || ShowStandardToolbar)
+  if (ShowArchiveToolbar || ShowStandardToolbar || ShowWimDismToolbar)
   {
     CreateToolbar(_window, _buttonsImageList, _toolBar, LargeButtons);
     unsigned i;
@@ -283,6 +291,9 @@ void CApp::ReloadToolbars()
     if (ShowStandardToolbar)
       for (i = 0; i < ARRAY_SIZE(g_StandardButtons); i++)
         AddButton(_buttonsImageList, _toolBar, g_StandardButtons[i], ShowButtonsLables, LargeButtons);
+    if (ShowWimDismToolbar)
+      for (i = 0; i < ARRAY_SIZE(g_WimDismButtons); i++)
+        AddButton(_buttonsImageList, _toolBar, g_WimDismButtons[i], ShowButtonsLables, LargeButtons);
 
     _toolBar.AutoSize();
   }

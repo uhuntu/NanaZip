@@ -47,7 +47,9 @@ void CExtractCallbackImp::Init()
   _lang_Reading = "Reading";
 
   NumArchiveErrors = 0;
+  NumArchiveWarnings = 0;
   ThereAreMessageErrors = false;
+  ThereAreMessageWarnings = false;
   #ifndef _SFX
   NumFolders = NumFiles = 0;
   NeedAddFile = false;
@@ -58,6 +60,12 @@ void CExtractCallbackImp::AddError_Message(LPCWSTR s)
 {
   ThereAreMessageErrors = true;
   ProgressDialog->Sync.AddError_Message(s);
+}
+
+void CExtractCallbackImp::AddWarning_Message(LPCWSTR s)
+{
+    ThereAreMessageWarnings = true;
+    ProgressDialog->Sync.AddWarning_Message(s);
 }
 
 #ifndef _SFX
@@ -527,8 +535,8 @@ static UString GetBracedType(const wchar_t *type)
   return s;
 }
 
-void OpenResult_GUI(UString &s, const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result);
-void OpenResult_GUI(UString &s, const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result)
+void OpenResult_GUI(UString &s, bool &just_warning, const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result);
+void OpenResult_GUI(UString &s, bool &just_warning, const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result)
 {
   FOR_VECTOR (level, arcLink.Arcs)
   {
@@ -537,6 +545,11 @@ void OpenResult_GUI(UString &s, const CCodecs *codecs, const CArchiveLink &arcLi
 
     if (!er.IsThereErrorOrWarning() && er.ErrorFormatIndex < 0)
       continue;
+
+    // Only Warnings
+    if (!er.IsThereError() && er.IsThereWarning()) {
+        just_warning = true;
+    }
 
     if (s.IsEmpty())
     {
@@ -606,11 +619,18 @@ HRESULT CExtractCallbackImp::OpenResult(const CCodecs *codecs, const CArchiveLin
   _needWriteArchivePath = true;
 
   UString s;
-  OpenResult_GUI(s, codecs, arcLink, name, result);
+  bool just_warning = false;
+  OpenResult_GUI(s, just_warning, codecs, arcLink, name, result);
   if (!s.IsEmpty())
   {
-    NumArchiveErrors++;
-    AddError_Message(s);
+    if (just_warning) {
+        NumArchiveWarnings++;
+        AddWarning_Message(s);
+    }
+    else {
+        NumArchiveErrors++;
+        AddError_Message(s);
+    }
     _needWriteArchivePath = false;
   }
 

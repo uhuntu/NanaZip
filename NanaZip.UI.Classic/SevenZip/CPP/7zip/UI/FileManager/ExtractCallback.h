@@ -243,6 +243,7 @@ private:
 
   HRESULT SetCurrentFilePath2(const wchar_t *filePath);
   void AddError_Message(LPCWSTR message);
+  void AddWarning_Message(LPCWSTR message);
 
   #ifndef _SFX
   bool _hashStreamWasUsed;
@@ -269,7 +270,9 @@ public:
   bool NeedAddFile;
   #endif
   UInt32 NumArchiveErrors;
+  UInt32 NumArchiveWarnings;
   bool ThereAreMessageErrors;
+  bool ThereAreMessageWarnings;
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
   #ifndef _NO_CRYPTO

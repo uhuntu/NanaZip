@@ -240,6 +240,9 @@
   <data name="Resource751" xml:space="preserve">
     <value>Standard Toolbar</value>
   </data>
+  <data name="Resource755" xml:space="preserve">
+    <value>WimDism Toolbar</value>
+  </data>
   <data name="Resource752" xml:space="preserve">
     <value>Large Buttons</value>
   </data>
@@ -519,6 +522,9 @@
   <data name="Resource1098" xml:space="preserve">
     <value>Metadata Changed</value>
   </data>
+  <data name="Resource1200" xml:space="preserve">
+    <value>GUID</value>
+  </data>
   <data name="Resource2100" xml:space="preserve">
     <value>Options</value>
   </data>
@@ -715,6 +721,9 @@ Do you want to update it in the archive?</value>
   </data>
   <data name="Resource3302" xml:space="preserve">
     <value>Testing</value>
+  </data>
+  <data name="Resource3310" xml:space="preserve">
+    <value>Testing DISM</value>
   </data>
   <data name="Resource3303" xml:space="preserve">
     <value>Opening...</value>
@@ -1211,6 +1220,18 @@ Do you want to update it in the archive?</value>
   <data name="Resource7206" xml:space="preserve">
     <value>Info</value>
   </data>
+  <data name="Resource7210" xml:space="preserve">
+    <value>Mount</value>
+  </data>
+  <data name="Resource7211" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Resource7212" xml:space="preserve">
+    <value>Expand</value>
+  </data>
+  <data name="Resource7213" xml:space="preserve">
+    <value>WimInfo</value>
+  </data>
   <data name="Resource7300" xml:space="preserve">
     <value>Split File</value>
   </data>
@@ -1268,6 +1289,9 @@ Are you sure you want to split archive into such volumes?</value>
   </data>
   <data name="Resource7503" xml:space="preserve">
     <value>CRC checksum for data and names:</value>
+  </data>
+  <data name="Resource7510" xml:space="preserve">
+    <value>WimDism information</value>
   </data>
   <data name="Resource7600" xml:space="preserve">
     <value>Benchmark</value>

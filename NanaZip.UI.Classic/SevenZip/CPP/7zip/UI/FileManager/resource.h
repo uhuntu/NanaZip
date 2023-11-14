@@ -12,6 +12,11 @@
 #define IDB_DELETE   105
 #define IDB_INFO     106
 
+#define IDB_MOUNT    110
+#define IDB_NEW      111
+#define IDB_EXPAND   112
+#define IDB_WIMINFO  113
+
 #define IDB_ADD2     150
 #define IDB_EXTRACT2 151
 #define IDB_TEST2    152
@@ -19,6 +24,11 @@
 #define IDB_MOVE2    154
 #define IDB_DELETE2  155
 #define IDB_INFO2    156
+
+#define IDB_MOUNT2   170
+#define IDB_NEW2     171
+#define IDB_EXPAND2  172
+#define IDB_WIMINFO2 173
 
 #define IDB_PARENT_FOLDER 160
 
@@ -98,6 +108,7 @@
 
 #define IDM_VIEW_ARCHIVE_TOOLBAR            750
 #define IDM_VIEW_STANDARD_TOOLBAR           751
+#define IDM_VIEW_WIMDISM_TOOLBAR            755
 #define IDM_VIEW_TOOLBARS_LARGE_BUTTONS     752
 #define IDM_VIEW_TOOLBARS_SHOW_BUTTONS_TEXT 753
 
@@ -178,6 +189,11 @@
 #define IDS_BUTTON_MOVE                 7204
 #define IDS_BUTTON_DELETE               7205
 #define IDS_BUTTON_INFO                 7206
+
+#define IDS_MOUNT                       7210
+#define IDS_NEW                         7211
+#define IDS_EXPAND                      7212
+#define IDS_WIMINFO                     7213
 
 #define IDS_SPLITTING                   7303
 #define IDS_SPLIT_CONFIRM_TITLE         7304

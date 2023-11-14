@@ -118,7 +118,8 @@ static void ThrowException_if_Error(HRESULT res)
 static int Main2()
 {
   UStringVector commandStrings;
-  NCommandLineParser::SplitCommandLine(GetCommandLineW(), commandStrings);
+  UString commandLine = GetCommandLineW();
+  NCommandLineParser::SplitCommandLine(commandLine, commandStrings);
 
   #ifndef UNDER_CE
   if (commandStrings.Size() > 0)
@@ -128,6 +129,9 @@ static int Main2()
   {
     MessageBoxW(0, L"Specify command", L"NanaZip", 0);
     return 0;
+  }
+  else {
+    MessageBoxW(0, commandLine, L"NanaZip", 0);
   }
 
   CArcCmdLineOptions options;
@@ -157,6 +161,7 @@ static int Main2()
   #endif
 
   const bool isExtractGroupCommand = options.Command.IsFromExtractGroup();
+  const bool isWimDismGroupCommand = options.Command.IsFromWimDismGroup();
 
   if (codecs->Formats.Size() == 0 &&
         (isExtractGroupCommand
@@ -302,6 +307,88 @@ static int Main2()
     }
     if (!ecs->IsOK())
       return NExitCode::kFatalError;
+  }
+  else if (isWimDismGroupCommand)
+  {
+      UStringVector ArchivePathsSorted;
+      UStringVector ArchivePathsFullSorted;
+
+      CExtractCallbackImp* ecs = new CExtractCallbackImp;
+      CMyComPtr<IFolderArchiveExtractCallback> extractCallback = ecs;
+
+#ifndef _NO_CRYPTO
+      ecs->PasswordIsDefined = options.PasswordEnabled;
+      ecs->Password = options.Password;
+#endif
+
+      ecs->Init();
+
+      CExtractOptions eo;
+      (CExtractOptionsBase&)eo = options.ExtractOptions;
+      eo.StdInMode = options.StdInMode;
+      eo.StdOutMode = options.StdOutMode;
+      eo.YesToAll = options.YesToAll;
+
+#ifndef _SFX
+      eo.Properties = options.Properties;
+#endif
+
+      bool messageWasDisplayed = false;
+
+#ifndef _SFX
+      CHashBundle hb;
+      CHashBundle* hb_ptr = NULL;
+
+      if (!options.HashMethods.IsEmpty())
+      {
+          hb_ptr = &hb;
+          ThrowException_if_Error(hb.SetMethods(EXTERNAL_CODECS_VARS_L options.HashMethods));
+      }
+#endif
+
+      {
+          CDirItemsStat st;
+          HRESULT hresultMain = EnumerateDirItemsAndSort(
+              options.arcCensor,
+              NWildcard::k_RelatPath,
+              UString(), // addPathPrefix
+              ArchivePathsSorted,
+              ArchivePathsFullSorted,
+              st,
+              NULL // &scan: change it!!!!
+          );
+          if (hresultMain != S_OK)
+          {
+              /*
+              if (hresultMain != E_ABORT && messageWasDisplayed)
+                return NExitCode::kFatalError;
+              */
+              throw CSystemException(hresultMain);
+          }
+      }
+
+      ecs->MultiArcMode = (ArchivePathsSorted.Size() > 1);
+
+      HRESULT result = ExtractGUI(
+          // EXTERNAL_CODECS_VARS_L
+          codecs,
+          formatIndices, excludedFormats,
+          ArchivePathsSorted,
+          ArchivePathsFullSorted,
+          options.Censor.Pairs.Front().Head,
+          eo,
+#ifndef _SFX
+          hb_ptr,
+#endif
+          options.ShowDialog, messageWasDisplayed, ecs);
+      if (result != S_OK)
+      {
+          if (result != E_ABORT && messageWasDisplayed)
+              return NExitCode::kFatalError;
+          throw CSystemException(result);
+      }
+      if (!ecs->IsOK())
+          return NExitCode::kFatalError;
   }
   else if (options.Command.IsFromUpdateGroup())
   {

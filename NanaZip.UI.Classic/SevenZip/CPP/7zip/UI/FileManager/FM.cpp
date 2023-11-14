@@ -784,6 +784,20 @@ static void ExecuteCommand(UINT commandID)
   }
 }
 
+static void ExecuteCommandDism(UINT commandID)
+{
+  CPanel::CDisableTimerProcessing disableTimerProcessing1(g_App.Panels[0]);
+  CPanel::CDisableTimerProcessing disableTimerProcessing2(g_App.Panels[1]);
+
+  switch (commandID)
+  {
+    case kMenuCmdID_WimDism_Mount: g_App.TestArchives(); break;
+    case kMenuCmdID_WimDism_New: g_App.TestArchives(); break;
+    case kMenuCmdID_WimDism_Expand: g_App.TestArchives(); break;
+    case kMenuCmdID_WimDism_WimInfo: g_App.TestArchives(); break;
+  }
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   switch (message)
@@ -798,6 +812,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       {
         ExecuteCommand(wmId);
         return 0;
+      }
+      else if (wmId >= kMenuCmdID_WimDism_Start && wmId < kMenuCmdID_WimDism_End) {
+        ExecuteCommandDism(wmId);
       }
       if (OnMenuCommand(hWnd, wmId))
         return 0;

@@ -26,13 +26,14 @@ void CUpdateCallbackGUI::Init()
   FailedFiles.Clear();
 }
 
-void OpenResult_GUI(UString &s, const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result);
+void OpenResult_GUI(UString& s, bool& just_warning, const CCodecs* codecs, const CArchiveLink& arcLink, const wchar_t* name, HRESULT result);
 
 HRESULT CUpdateCallbackGUI::OpenResult(
     const CCodecs *codecs, const CArchiveLink &arcLink, const wchar_t *name, HRESULT result)
 {
   UString s;
-  OpenResult_GUI(s, codecs, arcLink, name, result);
+  bool just_warning = false;
+  OpenResult_GUI(s, just_warning, codecs, arcLink, name, result);
   if (!s.IsEmpty())
   {
     ProgressDialog->Sync.AddError_Message(s);
